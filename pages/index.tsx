@@ -11,5 +11,4 @@ const IndexPage = (): JSX.Element => (
         </p>
     </Layout>
 );
-
 export default IndexPage;
