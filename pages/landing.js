@@ -47,6 +47,7 @@ const LandingPage = (): ReactElement => (
         <Section3 />
         <Section4 />
         {/* </Layout> */}
+
         <Footer />
     </Wrapper>
 );
