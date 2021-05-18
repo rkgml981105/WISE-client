@@ -1,20 +1,19 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable */
 // import App from 'next/app';
-import { AppProps /* , AppContext */ } from 'next/app'; // 타입 임포트
-import { ReactElement } from 'react';
-import Head from 'next/head';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.css'
+import Head from 'next/head'
+import PropTypes from 'prop-types'
 
-function MyApp({ Component, pageProps }: AppProps): ReactElement {
-    return (
-        <>
-            <Head>
-                <title>WISE</title>
-            </Head>
-            <Component {...pageProps} />
-        </>
-    );
-}
+import wrapper from '../store/configureStore'
+
+const WISE = ({ Component, pageProps }) => (
+    <>
+        <Head>
+            <title>WISE</title>
+        </Head>
+        <Component {...pageProps} />
+    </>
+);
 
 // Only uncomment this method if you have blocking data requirements for
 // every single page in your application. This disables the ability to
@@ -28,4 +27,9 @@ function MyApp({ Component, pageProps }: AppProps): ReactElement {
 //   return { ...appProps };
 // };
 
-export default MyApp;
+WISE.prototype = {
+    Component: PropTypes.elementType.isRequired,
+    pageProps: PropTypes.object
+}
+
+export default wrapper.withRedux(WISE)

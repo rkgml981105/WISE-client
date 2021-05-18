@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import Item from './Item';
 
 const TotalSection = ({ title }) => {
-    const tmp = [];
-
+    const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <Wrapper>
             <Header>{title}</Header>
@@ -24,7 +23,6 @@ const Wrapper = styled.div`
     // border: 1px solid black;
     display: flex;
     flex-direction: column;
-    margin-bottom: 3rem;
     h2 {
         font-weight: bolder;
     }
