@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable */
 // import App from 'next/app';
 import 'antd/dist/antd.css';
 import Head from 'next/head';
