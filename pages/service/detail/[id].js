@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from 'react';
+// import { useCallback, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
@@ -19,11 +19,12 @@ const Global = createGlobalStyle`
     footer {
         padding: 2rem 0;
     }
-    .Summary__Wrapper-sc-1wbecrp-0{
+    .Summary__Wrapper-sc-1wbecrp-0, .Navigation__Wrapper-sc-1jd4ncw-0{
       position: sticky;
       top: 0;
       z-index: 10;
     }
+
 `;
 
 const ServiceDetail = () => {
@@ -33,8 +34,6 @@ const ServiceDetail = () => {
     console.log(id);
 
     const { service, review } = useSelector((state) => state.service);
-    const dispatch = useDispatch();
-    console.log('service: ', service);
     // const handleClickServiceDetail = useCallback(() => {
     //     dispatch({
     //         type: GET_SERVICE_INFO_REQUEST,
@@ -57,7 +56,7 @@ const ServiceDetail = () => {
                         <Container>
                             <Detail>
                                 <CoverImg src={`${IMAGE_URL}${service.images[0]}`} alt="cover images" />
-                                <Navigation />
+                                <Navigation id={id} />
                                 <Description service={service} />
                                 <Review review={review} />
                                 <FAQ />
