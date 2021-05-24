@@ -15,7 +15,6 @@ import Loading from '../../../components/Loading';
 import FAQ from '../../../components/ServiceDetail/FAQ';
 import Refund from '../../../components/ServiceDetail/Refund';
 import wrapper from '../../../store/configureStore';
-import { loadMyInfo, LOG_IN_SUCCESS } from '../../../reducers/user';
 
 const Global = createGlobalStyle`
     footer {
