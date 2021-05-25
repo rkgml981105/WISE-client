@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import { ReactElement } from 'react';
 import styled from 'styled-components';
 import useIsInViewport from 'use-is-in-viewport';
 
-const Section1 = (): ReactElement => {
+const Section1 = () => {
     const [isInViewport, targetRef] = useIsInViewport();
     return (
         <Wrapper ref={targetRef} className={isInViewport ? 'visible' : 'hidden'}>
@@ -14,7 +13,7 @@ const Section1 = (): ReactElement => {
                     라이프를 위해
                 </h1>
                 <p>병원에 가실 땐 저희가 동행해 드릴게요.</p>
-                <Link href="/">
+                <Link href="/home">
                     <StartBtn>시작하기</StartBtn>
                 </Link>
             </Text>
@@ -38,7 +37,7 @@ const Text = styled.div`
     display: flex;
     flex-direction: column;
     position: absolute;
-    margin: 15% 0 0 15%;
+    margin: 15rem 0 0 15%;
     color: #222;
     h1 {
         font-size: 3rem;

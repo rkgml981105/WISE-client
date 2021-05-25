@@ -1,18 +1,13 @@
-import React, { ReactElement, ReactNode } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Head from 'next/head';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
 
-type Props = {
-    children?: ReactNode;
-    title?: string;
-};
-
 const Global = createGlobalStyle`
   html,
   body {
-    height: 100%;
     padding: 0;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -20,10 +15,12 @@ const Global = createGlobalStyle`
     }
 
   #__next {
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
 
   a {
@@ -36,7 +33,12 @@ const Global = createGlobalStyle`
   }
 `;
 
-const Layout = ({ children, title }: Props): ReactElement => (
+interface LayoutProps {
+  children: JSX.Element,
+  title?: string;
+}
+
+const Layout = ({ children, title }:LayoutProps) => (
     <>
         <Global />
         <Head>
@@ -53,6 +55,13 @@ const Layout = ({ children, title }: Props): ReactElement => (
 const MainComponent = styled.div`
     display: flex;
     justify-content: center;
+    width: 100vw;
+    flex-grow: 1;
 `;
+
+Layout.propTypes = {
+    children: PropTypes.node.isRequired,
+    title: PropTypes.string.isRequired,
+};
 
 export default Layout;

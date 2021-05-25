@@ -1,86 +1,94 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { loginRequestAction } from '../../reducers/user';
+import ErrorMessage from './ErrorMessage';
+import Oauth from './Oauth';
+import { InputWrapper, Form, FormBtn, ErrorBox } from './styles';
 
-const SigninForm = (): JSX.Element => (
-    <>
-        <FormWrapper>
-            <TypeSelect>
-                <input type="radio" id="user" name="type" />
-                <label htmlFor="user">일반유저</label>
-                <input type="radio" id="assistant" name="type" />
-                <label htmlFor="assistant">어시스턴트</label>
-            </TypeSelect>
-            <InputWrapper>
-                <label htmlFor="user-email">이메일</label>
-                <input name="user-email" type="email" placeholder="ex) user@mate.com" required />
-            </InputWrapper>
-            <InputWrapper>
-                <label htmlFor="user-password">비밀번호</label>
-                <input name="user-password" type="password" placeholder="********" required />
-            </InputWrapper>
-            <SigninBtn type="submit">로그인</SigninBtn>
-        </FormWrapper>
-    </>
-);
+const SigninForm = () => {
+    const dispatch = useDispatch();
+    const { logInError } = useSelector((state) => state.user);
 
-const FormWrapper = styled.form`
-    // border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-`;
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [loginErrMsg, setLoginErrMsg] = useState(logInError);
 
-const TypeSelect = styled.div`
-    margin: 2rem 0 3.125rem 0;
-    input[type='radio'] {
-        display: none;
-    }
-    input[type='radio'] + label {
-        display: inline-block;
-        width: 50%;
-        height: 3rem;
-        text-align: center;
-        line-height: 3.125rem;
-        border: 1px solid #e5e5e5;
-        cursor: pointer;
-        border-radius: 0 15px 15px 0;
-    }
-    input[type='radio']:first-child + label {
-        border-radius: 15px 0 0 15px;
-    }
-    input[type='radio']:checked + label {
-        background-color: #68d480;
-        color: #fff;
-    }
-`;
+    useEffect(() => {
+        setLoginErrMsg(logInError);
+    }, [logInError]);
 
-const InputWrapper = styled.div`
-    // border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    input {
-        width: 100%;
-        border: 1px solid #e5e5e5;
-        height: 3.125rem;
-        margin: 0.8rem auto 0 auto;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-    }
-    input:focus {
-        outline: none;
-    }
-    margin-bottom: 2.5rem;
-`;
+    useEffect(() => {
+        setLoginErrMsg('');
+    }, []);
 
-const SigninBtn = styled.button`
-    border: none;
-    font-weight: 600;
-    height: 3.75rem;
-    background-color: #68d480;
-    color: white;
-    border-radius: 0.5rem;
-    margin: 0.625rem 0 1.25rem 0;
-    cursor: pointer;
+    const onChangeEmail = useCallback((e) => {
+        setEmail(e.target.value);
+        setEmailError(false);
+    }, []);
+
+    const onChangePassword = useCallback((e) => {
+        setPassword(e.target.value);
+        setPasswordError(false);
+    }, []);
+
+    const onsubmit = useCallback(
+        (e) => {
+            e.preventDefault();
+            if (!email || !password) {
+                if (!email) {
+                    setEmailError(true);
+                }
+                if (!password) {
+                    setPasswordError(true);
+                }
+                return;
+            }
+            dispatch(loginRequestAction(email, password));
+        },
+        [email, password],
+    );
+
+    return (
+        <>
+            <Form onSubmit={onsubmit}>
+                <InputWrapper>
+                    <label htmlFor="user-email">이메일</label>
+                    <input
+                        name="user-email"
+                        type="email"
+                        placeholder="ex) user@mate.com"
+                        value={email}
+                        onChange={onChangeEmail}
+                    />
+                    <ErrorBox>{emailError && <ErrorMessage message="이메일을 입력해주세요." />}</ErrorBox>
+                </InputWrapper>
+                <InputWrapper>
+                    <label htmlFor="user-password">비밀번호</label>
+                    <input
+                        name="user-password"
+                        type="password"
+                        placeholder="********"
+                        onChange={onChangePassword}
+                        value={password}
+                        minLength={6}
+                    />
+                    <ErrorBox>{passwordError && <ErrorMessage message="비밀번호를 입력해주세요." />}</ErrorBox>
+                </InputWrapper>
+                <FormBtn>로그인</FormBtn>
+                <LoginErrMsg>{loginErrMsg || ''}</LoginErrMsg>
+                <Oauth />
+            </Form>
+        </>
+    );
+};
+
+const LoginErrMsg = styled.div`
+    color: red;
+    line-height: 2rem;
+    height: 2rem;
 `;
 
 export default SigninForm;

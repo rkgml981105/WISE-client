@@ -1,18 +1,51 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // import App from 'next/app';
-import { AppProps /* , AppContext */ } from 'next/app'; // 타입 임포트
-import { ReactElement } from 'react';
-import Head from 'next/head';
-import wrapper from '../store/configureStore';
 import 'antd/dist/antd.css';
+import Head from 'next/head';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createGlobalStyle } from 'styled-components';
+import { loadMyInfo } from '../reducers/user';
 
-const WrappedApp = ({ Component, pageProps }: AppProps): ReactElement => (
-    <>
-        <Head>
-            <title>WISE</title>
-        </Head>
-        <Component {...pageProps} />
-    </>
-);
+import wrapper from '../store/configureStore';
+
+import type { AppProps } from 'next/app'
+
+const Global = createGlobalStyle`
+    body{
+        // letter-spacing: -75px;
+        color: #191919;
+    }
+    a:hover {
+     color: #222;
+ }
+`;
+
+// https://myeongjae.kim/blog/2020/04/07/next-js-app-functional-component
+const WISE = ({ Component, pageProps }: AppProps) => {
+    const dispatch = useDispatch();
+
+    const { me } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (!me) {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                dispatch(loadMyInfo());
+            }
+        }
+    }, [me]);
+
+    return (
+        <>
+            <Head>
+                <title>WISE</title>
+            </Head>
+            <Global />
+            <Component {...pageProps} />
+        </>
+    );
+};
 
 // Only uncomment this method if you have blocking data requirements for
 // every single page in your application. This disables the ability to
@@ -26,4 +59,4 @@ const WrappedApp = ({ Component, pageProps }: AppProps): ReactElement => (
 //   return { ...appProps };
 // };
 
-export default wrapper.withRedux(WrappedApp);
+export default wrapper.withRedux(WISE);
