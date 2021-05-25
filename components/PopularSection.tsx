@@ -1,15 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 import styled from 'styled-components';
 import { useRef, useState } from 'react';
-import Item from './Item';
+import { useSelector } from 'react-redux';
+import ServiceCard from './ServiceCard';
 
-const PopularSection = (): JSX.Element => {
-    const responsive = {
-        0: { items: 1 },
-        576: { items: 2 },
-        768: { items: 3 },
-        992: { items: 4 },
-    };
-    const items = [<Item key={1} />, <Item key={2} />, <Item key={3} />, <Item key={4} />, <Item key={5} />];
+const PopularSection = () => {
+    const { popularService } = useSelector((state) => state.service);
 
     const slider = useRef();
     const container = useRef();
@@ -24,20 +20,16 @@ const PopularSection = (): JSX.Element => {
             setMainIndex(mainIndex - 1);
         }
     };
-    console.log(slider.current.style);
+
     return (
         <Wrapper>
             <Header>인기있는 어시스턴트</Header>
             <PrevBtn onClick={slidePrev}>&lang;</PrevBtn>
             <Container ref={container}>
                 <Slider ref={slider}>
-                    <Item name="11" />
-                    <Item name="22" />
-                    <Item name="33" />
-                    <Item name="44" />
-                    <Item name="55" />
-                    <Item name="66" />
-                    <Item name="77" />
+                    {popularService.map((ele) => (
+                        <ServiceCard key={ele._id} service={ele} />
+                    ))}
                 </Slider>
             </Container>
             <NextBtn onClick={slideNext}>&rang;</NextBtn>

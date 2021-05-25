@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import { ReactElement } from 'react';
 import styled from 'styled-components';
 import useIsInViewport from 'use-is-in-viewport';
 
-const Section2 = (): ReactElement => {
+const Section2 = () => {
     const [isInViewport, targetRef] = useIsInViewport();
 
     return (
@@ -11,7 +10,7 @@ const Section2 = (): ReactElement => {
             <MainBox>
                 <Text>
                     <h1>이제 마음껏 사용해보세요!</h1>
-                    <Link href="/">
+                    <Link href="/home">
                         <StartBtn>시작하기</StartBtn>
                     </Link>
                 </Text>

@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Layout from '../../components/Layout';
 import AssistantInfo from '../../components/AssistantInfo';
-import OrderItem from '../../components/orderItem';
+import OrderItem from '../../components/OrderItem';
 
 const Global = createGlobalStyle`
     footer {
@@ -10,15 +10,17 @@ const Global = createGlobalStyle`
     }
 `;
 
-const Payment = (): ReactElement => (
-    <Layout>
-        <Global />
-        <Wrapper>
-            <OrderItem />
-            <AssistantInfo />
-        </Wrapper>
-    </Layout>
-);
+const Payment = () => {
+    return (
+        <Layout>
+            <Global />
+            <Wrapper>
+                <OrderItem />
+                <AssistantInfo />
+            </Wrapper>
+        </Layout>
+    );
+};
 
 const Wrapper = styled.div`
     width: 100%;

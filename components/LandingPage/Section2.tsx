@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import { ReactElement } from 'react';
 import styled from 'styled-components';
 import useIsInViewport from 'use-is-in-viewport';
 
-const Section2 = (): ReactElement => {
+const Section2 = () => {
     const [isInViewport, targetRef] = useIsInViewport();
     return (
         <>
@@ -28,7 +27,7 @@ const Section2 = (): ReactElement => {
                             <h2>교육을 이수한 후, 어시스턴트로도 활동해 보세요.</h2>
                             <p>도움이 필요한 사람들과의 매칭을 도와드릴게요.</p>
                         </SmallText>
-                        <Link href="/signin">
+                        <Link href="/user/signin">
                             <RegisterBtn> 어시스턴트 등록하기 </RegisterBtn>
                         </Link>
                     </BannerText>
@@ -116,7 +115,7 @@ const RegisterBtn = styled.a`
     margin-left: -20%;
     height: 3.6rem;
     width: 14rem;
-    color: #777;
+    color: #68d480;
     font-weight: 500;
     font-size: 1.2rem;
     border: 1px solid #68d480;

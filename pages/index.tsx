@@ -1,29 +1,47 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import Layout from '../components/Layout';
-import SearchBar from '../components/SearchBar';
-import PopularSection from '../components/PopularSection';
-import TotalSection from '../components/TotalSection';
+import Section1 from '../components/LandingPage/Section1';
+import Section2 from '../components/LandingPage/Section2';
+import Section3 from '../components/LandingPage/Section3';
+import Section4 from '../components/LandingPage/Section4';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Global = createGlobalStyle`
-    .dCaWGQ  {
-        position: static;
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .hidden,
+  .visible {
+    transition: all 1.5s ease-in-out 200ms;
+    will-change: opacity;
+    opacity: 0;
+    }
+    
+  .visible {
+      opacity: 1;
+    transform: translateY(-6rem);
     }
 `;
 
-const Home = (): JSX.Element => (
-    <Layout>
-        <Global />
+const LandingPage = () => {
+    return (
         <Wrapper>
-            <SearchBar />
-            <PopularSection />
-            <TotalSection title="전체 어시스턴트" />
+            <Header />
+            <Global />
+            <Section1 />
+            <Section2 />
+            <Section3 />
+            <Section4 />
+            <Footer />
         </Wrapper>
-    </Layout>
-);
+    );
+};
 
 const Wrapper = styled.div`
-    // border: 1px solid black;
-    padding: 3rem;
+    height: 520vh;
 `;
 
-export default Home;
+export default LandingPage;
