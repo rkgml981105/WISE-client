@@ -1,10 +1,10 @@
 import { HYDRATE } from 'next-redux-wrapper';
-import { combineReducers } from 'redux';
-
+import { combineReducers, Reducer, AnyAction } from 'redux';
 import user from './user';
 import service from './service';
+// import { CombinedState } from '../store/configureStore';
 
-const rootReducer = (state, action) => {
+const rootReducer: Reducer<any, AnyAction> = (state, action) => {
     switch (action.type) {
         case HYDRATE:
             console.log('HYDRATE', action);
