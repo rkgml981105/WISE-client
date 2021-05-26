@@ -60,67 +60,46 @@ export interface Query {
 }
 
 export type ServiceState = {
-    popularService:
-        | [
-              {
-                  popularServices: ShortService[];
-              },
-          ]
-        | [];
-    totalService:
-        | [
-              {
-                  services: ShortService[];
-              },
-          ]
-        | [];
-    totalServiceCount: number;
-    searchService:
-        | [
-              {
-                  services: ShortService[];
-              },
-          ]
-        | [];
-    searchServiceCount: number;
+    popularServices: ShortService[] | [];
+    totalServices: ShortService[] | [];
+    totalServicesCount: number;
+    searchServices: ShortService[] | [];
+    searchServicesCount: number;
     searchQuery: Query | null;
     service: LongService | null;
     reviews: Review[] | null;
-    popularServiceLoading: boolean;
-    popularServiceDone: boolean;
-    popularServiceError: null | Error;
-    totalServiceLoading: boolean;
-    totalServiceDone: boolean;
-    totalServiceError: null | Error;
-    searchServiceLoading: boolean;
-    searchServiceDone: boolean;
-    searchServiceError: null | Error;
-
-    loadAllServicesLoading: boolean;
-    loadAllServicesDone: boolean;
-    loadAllServicesError: null | Error;
+    popularServicesLoading: boolean;
+    popularServicesDone: boolean;
+    popularServicesError: null | string;
+    totalServicesLoading: boolean;
+    totalServicesDone: boolean;
+    totalServicesError: null | string;
+    searchServicesLoading: boolean;
+    searchServicesDone: boolean;
+    searchServicesError: null | string;
     getSingleServiceLoading: boolean;
     getSingleServiceDone: boolean;
-    getSingleServiceError: null | Error;
+    getSingleServiceError: null | string;
     loadFirstReviewsLoading: boolean;
     loadFirstReviewsDone: boolean;
-    loadFirstReviewsError: null | Error;
+    loadFirstReviewsError: null | string;
     loadMoreReviewsLoading: boolean;
     loadMoreReviewsDone: boolean;
-    loadMoreReviewsError: null | Error;
-    reservationRequests: Order[] | null;
+    loadMoreReviewsError: null | string;
     reservationRequestDone: boolean;
-    reservationRequestError: null | Error;
+    reservationRequestError: null | string;
+    getAllReservationsDone: boolean;
+    reservationRequests: Order[] | null;
+    getAllReservationsError: null | string;
     getReservationInfoDone: boolean;
-    // TODO: 하나의 예약정보만 가져오는 api가 만들어지면 채워넣기
     getReservationInfo: Order | null;
-    getReservationInfoError: null | Error;
+    getReservationInfoError: null | string;
     reservationAcceptedDone: boolean;
     reservationAccepted: Order | null;
-    reservationAcceptedError: null | Error;
+    reservationAcceptedError: null | string;
     reservationRejectedDone: boolean;
-    reservationRejectedError: null | Error;
-    // TODO: 결제 및 매칭이 성공하는 api가 만들어지면 채워넣기
-    reservationComplete: null;
-    reservationCompleteError: null | Error;
+    reservationRejectedError: null | string;
+    checkoutDone: boolean;
+    checkoutStatus: null | string;
+    checkoutError: null | string;
 };

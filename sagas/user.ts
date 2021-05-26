@@ -86,7 +86,7 @@ function logInAPI(accessToken: string, { signinMethod }: LoginData) {
 
 function* logIn(action: ReturnType<typeof loginRequest>) {
     try {
-        const accessToken = yield call(loginToken, action.data);
+        const accessToken: string = yield call(loginToken, action.data);
         const result: AxiosResponse<{ user: User }> = yield call(logInAPI, accessToken, action.data);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('userId', result.data.user.id);
@@ -174,8 +174,8 @@ function signUpAPI(accessToken: string, { email, name, mobile, signinMethod }: S
 
 function* signUp(action: ReturnType<typeof signupRequest>) {
     try {
-        const accessToken = yield call(signupToken, action.data);
-        const result = yield call(signUpAPI, accessToken, action.data);
+        const accessToken: string = yield call(signupToken, action.data);
+        const result: AxiosResponse<{ user: User }> = yield call(signUpAPI, accessToken, action.data);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('userId', result.data.user.id);
         localStorage.removeItem('emailForSignup');
