@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-// import { AnyAction } from 'redux';
-import { ActionRequest } from '../interfaces/act/services';
+
+// import { ActionRequest } from '../interfaces/act/services';
 import { IActionsService } from '../interfaces/act/service';
 import { Query, ServiceState, ShortService } from '../interfaces/data/service';
 
