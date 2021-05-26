@@ -10,7 +10,7 @@ const Global = createGlobalStyle`
     }
 `;
 
-const Loading = (): ReactElement => (
+const Loading = () => (
     <>
         <Head>
             {/* Compiled and minified CSS */}

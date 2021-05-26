@@ -10,7 +10,7 @@ type NavProps = {
     href: string;
 };
 
-const ActiveLink = ({ children, activeClassName, ...props }: NavProps): ReactElement => {
+const ActiveLink = ({ children, activeClassName, ...props }: NavProps) => {
     const { asPath } = useRouter();
     const child = Children.only(children);
     const childClassName = child?.props.className || '';
