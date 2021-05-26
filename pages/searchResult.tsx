@@ -4,12 +4,15 @@ import styled from 'styled-components';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import TotalSection from '../components/TotalSection';
-import { loadSearchServiceRequestAction } from '../reducers/service';
+import { RootState } from '../reducers';
+import { loadSearchServiceRequest } from '../reducers/service';
 
 const SearchResult = () => {
     const dispatch = useDispatch();
 
-    const { searchService, searchServiceLoading, searchServiceCount } = useSelector((state) => state.service);
+    const { searchService, searchServiceLoading, searchServiceCount, searchQuery } = useSelector(
+        (state: RootState) => state.service,
+    );
     const [page, setPage] = useState(2);
 
     useEffect(() => {
@@ -19,7 +22,7 @@ const SearchResult = () => {
                 document.documentElement.scrollHeight - 300
             ) {
                 if (!searchServiceLoading && searchServiceCount > searchService.length) {
-                    dispatch(loadSearchServiceRequestAction(page));
+                    dispatch(loadSearchServiceRequest({ ...searchQuery, page }));
                     setPage((prev) => prev + 1);
                 }
             }
@@ -28,7 +31,7 @@ const SearchResult = () => {
         return () => {
             window.removeEventListener('scroll', onScroll);
         };
-    }, [searchServiceLoading, searchServiceCount]);
+    }, [searchServiceLoading, searchServiceCount, dispatch, page, searchService, searchQuery]);
 
     return (
         <Layout title="WISE | Search">

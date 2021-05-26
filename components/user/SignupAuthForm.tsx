@@ -1,14 +1,15 @@
 /* eslint-disable consistent-return */
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { emailCheckRequestAction } from '../../reducers/user';
+import { emailCheckRequest } from '../../reducers/user';
 import { InputWrapper, Form, FormBtn, ErrorBox } from './styles';
 import ErrorMessage from './ErrorMessage';
+import { RootState } from '../../reducers';
 
 const SignupAuthForm = () => {
     const dispatch = useDispatch();
-    const { emailCheckError } = useSelector((state) => state.user);
+    const { emailCheckError } = useSelector((state: RootState) => state.user);
 
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -22,20 +23,20 @@ const SignupAuthForm = () => {
         setEmailCheckErrorMsg('');
     }, []);
 
-    const onChangeEmail = useCallback((e) => {
+    const onChangeEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
         setEmailError(false);
         setEmailCheckErrorMsg('');
     }, []);
     const onsubmit = useCallback(
-        (e) => {
+        (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             if (!email) {
                 return setEmailError(true);
             }
-            dispatch(emailCheckRequestAction(email));
+            dispatch(emailCheckRequest(email));
         },
-        [email],
+        [dispatch, email],
     );
     return (
         <>

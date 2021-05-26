@@ -13,7 +13,7 @@ export const AuthGlobal = createGlobalStyle`
 
 export const CoverImg = styled.img.attrs({
     src: '/images/wise_bg.png',
-})<{filter : boolean }>`
+})<{ filter?: boolean }>`
     width: 100%;
     height: 100vh;
     object-fit: cover;

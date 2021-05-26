@@ -6,9 +6,10 @@ import { useEffect } from 'react';
 import Layout from '../components/Layout';
 import Loading from '../components/Loading';
 import { AuthGlobal, CoverImg } from '../components/user/styles';
+import { RootState } from '../reducers';
 
 const Welcome = () => {
-    const { me, islogin } = useSelector((state) => state.user);
+    const { me, islogin } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         if (!me) {
@@ -22,28 +23,30 @@ const Welcome = () => {
                 <Loading />
             ) : (
                 <Layout title="WISE | WELCOME">
-                    <AuthGlobal />
-                    <CoverImg />
-                    <Wrapper>
-                        <div>
-                            <h2>환영합니다!</h2>
-                            <p>
-                                안녕하세요, {me.name} 회원님.
-                                <br />
-                                WISE를 이용해 주셔서 감사합니다.
-                                <br />
-                                회원님이 주신 소중한 정보는 안전하게 관리하겠습니다.
-                            </p>
-                        </div>
-                        <Linker>
-                            <Link href="/home">
-                                <LinkBtn home>홈으로가기</LinkBtn>
-                            </Link>
-                            <Link href="/assistant/register">
-                                <LinkBtn>어시스턴트 등록하기</LinkBtn>
-                            </Link>
-                        </Linker>
-                    </Wrapper>
+                    <>
+                        <AuthGlobal />
+                        <CoverImg />
+                        <Wrapper>
+                            <div>
+                                <h2>환영합니다!</h2>
+                                <p>
+                                    안녕하세요, {me.name} 회원님.
+                                    <br />
+                                    WISE를 이용해 주셔서 감사합니다.
+                                    <br />
+                                    회원님이 주신 소중한 정보는 안전하게 관리하겠습니다.
+                                </p>
+                            </div>
+                            <Linker>
+                                <Link href="/home">
+                                    <LinkBtn home>홈으로가기</LinkBtn>
+                                </Link>
+                                <Link href="/assistant/register">
+                                    <LinkBtn>어시스턴트 등록하기</LinkBtn>
+                                </Link>
+                            </Linker>
+                        </Wrapper>
+                    </>
                 </Layout>
             )}
         </>
@@ -66,7 +69,7 @@ const Linker = styled.div`
     justify-content: space-evenly;
 `;
 
-const LinkBtn = styled.div`
+const LinkBtn = styled.div<{ home?: boolean }>`
     width: 5rem;
     height: 5rem;
     text-align: center;

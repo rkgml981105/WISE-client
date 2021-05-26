@@ -5,16 +5,17 @@ import SignupForm from '../../components/user/SignupForm';
 import Layout from '../../components/Layout';
 import { loadMyInfo } from '../../reducers/user';
 import { AuthGlobal, CoverImg, Modal, ModalTitle } from '../../components/user/styles';
+import { RootState } from '../../reducers';
 
 const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpDone, me } = useSelector((state) => state.user);
+    const { signUpDone, me } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         if (signUpDone) {
             dispatch(loadMyInfo());
         }
-    }, [signUpDone]);
+    }, [signUpDone, dispatch]);
 
     useEffect(() => {
         if (me) {
@@ -24,12 +25,14 @@ const Signup = () => {
 
     return (
         <Layout title="WISE | SIGNUP">
-            <AuthGlobal />
-            <CoverImg filter />
-            <Modal>
-                <ModalTitle>회원가입</ModalTitle>
-                <SignupForm />
-            </Modal>
+            <>
+                <AuthGlobal />
+                <CoverImg filter />
+                <Modal>
+                    <ModalTitle>회원가입</ModalTitle>
+                    <SignupForm />
+                </Modal>
+            </>
         </Layout>
     );
 };

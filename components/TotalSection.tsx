@@ -1,25 +1,30 @@
 /* eslint-disable no-underscore-dangle */
-import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import ServiceCard from './ServiceCard';
+import { RootState } from '../reducers';
+import { ShortService } from '../interfaces/data/service';
 
-const TotalSection = ({ title }) => {
-    const { totalService, searchService } = useSelector((state) => state.service);
+type TotalSectionProps = {
+    title: string;
+};
+
+const TotalSection = ({ title }: TotalSectionProps) => {
+    const { totalService, searchService } = useSelector((state: RootState) => state.service);
 
     return (
         <Wrapper>
             <Header>{title}</Header>
             <Row style={{ overflow: 'hidden' }}>
                 {title === '검색 결과'
-                    ? searchService.map((ele) => (
-                          <Col key={ele._id} xs={24} sm={12} md={8} lg={6} span={24}>
+                    ? searchService.map((ele: ShortService) => (
+                          <Col key={ele.id} xs={24} sm={12} md={8} lg={6} span={24}>
                               <ServiceCard service={ele} />
                           </Col>
                       ))
-                    : totalService.map((ele) => (
-                          <Col key={ele._id} xs={24} sm={12} md={8} lg={6} span={24}>
+                    : totalService.map((ele: ShortService) => (
+                          <Col key={ele.id} xs={24} sm={12} md={8} lg={6} span={24}>
                               <ServiceCard service={ele} />
                           </Col>
                       ))}
@@ -44,7 +49,4 @@ const Header = styled.div`
     margin-bottom: 1.5rem;
 `;
 
-TotalSection.propTypes = {
-    title: PropTypes.string.isRequired,
-};
 export default TotalSection;

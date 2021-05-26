@@ -6,13 +6,14 @@ import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 // import PopularSection from '../components/PopularSection';
 import TotalSection from '../components/TotalSection';
-import { loadPopularServiceRequestAction, loadTotalServiceRequestAction } from '../reducers/service';
+import { loadPopularServiceRequest, loadTotalServiceRequest } from '../reducers/service';
 import wrapper from '../store/configureStore';
+import { RootState } from '../reducers';
 
 const Home = () => {
     const dispatch = useDispatch();
 
-    const { totalService, totalServiceLoading, totalServiceCount } = useSelector((state) => state.service);
+    const { totalService, totalServiceLoading, totalServiceCount } = useSelector((state: RootState) => state.service);
     const [page, setPage] = useState(2);
 
     useEffect(() => {
@@ -22,7 +23,7 @@ const Home = () => {
                 document.documentElement.scrollHeight - 300
             ) {
                 if (!totalServiceLoading && totalServiceCount > totalService.length) {
-                    dispatch(loadTotalServiceRequestAction(page));
+                    dispatch(loadTotalServiceRequest(page));
                     setPage((prev) => prev + 1);
                 }
             }
@@ -31,7 +32,7 @@ const Home = () => {
         return () => {
             window.removeEventListener('scroll', onScroll);
         };
-    }, [totalServiceLoading, totalServiceCount]);
+    }, [totalServiceLoading, totalServiceCount, dispatch, page, totalService]);
 
     return (
         <Layout title="WISE | HOME">
@@ -52,10 +53,10 @@ const Wrapper = styled.div`
 `;
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-    context.store.dispatch(loadPopularServiceRequestAction());
-    context.store.dispatch(loadTotalServiceRequestAction(1));
+    context.store.dispatch(loadPopularServiceRequest());
+    context.store.dispatch(loadTotalServiceRequest(1));
     context.store.dispatch(END);
-    await context.store.sagaTask.toPromise();
+    await context.store.sagaTask?.toPromise();
 });
 
 export default Home;

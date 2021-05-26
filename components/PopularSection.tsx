@@ -3,18 +3,25 @@ import styled from 'styled-components';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ServiceCard from './ServiceCard';
+import { RootState } from '../reducers';
+import { ShortService } from '../interfaces/data/service';
 
 const PopularSection = () => {
-    const { popularService } = useSelector((state) => state.service);
+    const { popularService } = useSelector((state: RootState) => state.service);
 
-    const slider = useRef();
-    const container = useRef();
+    const slider = useRef<HTMLInputElement>(null);
     const [mainIndex, setMainIndex] = useState(0);
     const slideNext = () => {
+        if (!slider.current) {
+            return;
+        }
         slider.current.style.transform = `translateX(-${(mainIndex + 1) * 288}px)`;
         setMainIndex(mainIndex + 1);
     };
     const slidePrev = () => {
+        if (!slider.current) {
+            return;
+        }
         if (mainIndex > 0) {
             slider.current.style.transform = `translateX(-${(mainIndex - 1) * 288}px)`;
             setMainIndex(mainIndex - 1);
@@ -25,10 +32,10 @@ const PopularSection = () => {
         <Wrapper>
             <Header>인기있는 어시스턴트</Header>
             <PrevBtn onClick={slidePrev}>&lang;</PrevBtn>
-            <Container ref={container}>
+            <Container>
                 <Slider ref={slider}>
-                    {popularService.map((ele) => (
-                        <ServiceCard key={ele._id} service={ele} />
+                    {popularService.map((ele: ShortService) => (
+                        <ServiceCard key={ele.id} service={ele} />
                     ))}
                 </Slider>
             </Container>

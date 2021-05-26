@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Layout from '../../components/Layout';
-import { loadMyInfo } from '../../reducers/user';
+import { loadMyInfoRequest } from '../../reducers/user';
 import RegisterForm from '../../components/Assistant/RegisterForm/index';
+import { RootState } from '../../reducers';
 
 const Global = createGlobalStyle`
     footer {
@@ -14,29 +15,31 @@ const Global = createGlobalStyle`
     }
 `;
 
-const register = () => {
+const Register = () => {
     const dispatch = useDispatch();
 
-    const { me } = useSelector((state) => state.user);
+    const { me } = useSelector((state: RootState) => state.user);
     useEffect(() => {
         if (!me) {
             const userId = localStorage.getItem('userId');
             if (userId) {
-                dispatch(loadMyInfo());
+                dispatch(loadMyInfoRequest());
             } else {
                 Router.replace('/user/signin');
             }
         }
-    }, [me]);
+    }, [me, dispatch]);
 
     return (
         <Layout title="WISE | SIGNIN">
-            <Global />
-            <CoverImg src="/images/wise_bg.png" />
-            <Modal>
-                <Header>어시스턴트 프로필 등록</Header>
-                <RegisterForm />
-            </Modal>
+            <>
+                <Global />
+                <CoverImg src="/images/wise_bg.png" />
+                <Modal>
+                    <Header>어시스턴트 프로필 등록</Header>
+                    <RegisterForm />
+                </Modal>
+            </>
         </Layout>
     );
 };
@@ -70,4 +73,4 @@ const Header = styled.div`
     font-weight: bolder;
 `;
 
-export default register;
+export default Register;

@@ -1,14 +1,9 @@
 // import PropTypes from 'prop-types';
-import React, { ReactElement } from 'react';
+import { ReactChild } from 'react';
 import Head from 'next/head';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
-
-type Props = {
-    children: React.ReactNode;
-    title?: string;
-};
 
 const Global = createGlobalStyle`
   html,
@@ -37,7 +32,13 @@ const Global = createGlobalStyle`
     box-sizing: border-box;
   }
 `;
-const Layout = ({ children, title }: Props): ReactElement => (
+
+type Props = {
+    children: ReactChild;
+    title: string;
+};
+
+const Layout = ({ children, title }: Props) => (
     <>
         <Global />
         <Head>

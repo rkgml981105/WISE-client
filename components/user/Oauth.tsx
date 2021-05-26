@@ -2,16 +2,16 @@ import styled from 'styled-components';
 import { GoogleOutlined, FacebookOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
-import { oauthLoginRequestAction } from '../../reducers/user';
+import { oauthLoginRequest } from '../../reducers/user';
 
 const Oauth = () => {
     const dispatch = useDispatch();
     const onGoogleClick = useCallback(() => {
-        dispatch(oauthLoginRequestAction('google'));
-    }, []);
+        dispatch(oauthLoginRequest('google'));
+    }, [dispatch]);
     const onFacebookClick = useCallback(() => {
-        dispatch(oauthLoginRequestAction('facebook'));
-    }, []);
+        dispatch(oauthLoginRequest('facebook'));
+    }, [dispatch]);
     return (
         <Wrapper>
             <SigninButton onClick={onGoogleClick}>
