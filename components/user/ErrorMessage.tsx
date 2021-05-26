@@ -2,9 +2,9 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useMemo } from 'react';
 
-interface ErrorMessageProps {
+type ErrorMessageProps = {
     message: string;
-}
+};
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => {
     const style = useMemo(

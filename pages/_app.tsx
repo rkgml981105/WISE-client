@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 import type { AppProps } from 'next/app';
-import { loadMyInfo } from '../reducers/user';
+import { loadMyInfoRequest } from '../reducers/user';
 
 import wrapper from '../store/configureStore';
 import { RootState } from '../reducers';
@@ -21,7 +21,6 @@ const Global = createGlobalStyle`
  }
 `;
 
-// https://myeongjae.kim/blog/2020/04/07/next-js-app-functional-component
 const WISE = ({ Component, pageProps }: AppProps) => {
     const dispatch = useDispatch();
 
@@ -31,7 +30,7 @@ const WISE = ({ Component, pageProps }: AppProps) => {
         if (!me) {
             const userId = localStorage.getItem('userId');
             if (userId) {
-                dispatch(loadMyInfo());
+                dispatch(loadMyInfoRequest());
             }
         }
     }, [me, dispatch]);

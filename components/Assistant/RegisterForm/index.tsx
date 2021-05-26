@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Checkbox, Radio, Select } from 'antd';
+import { Button, Checkbox, Radio, RadioChangeEvent, Select } from 'antd';
 import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import useInput from '../../../hooks/useInput';
-import { registerServiceRequestAction } from '../../../reducers/user';
+import { registerServiceRequest } from '../../../reducers/user';
 import {
     ProfileImagesWrapper,
     Image,
@@ -14,15 +15,16 @@ import {
     SubmitBtn,
     RegisterFormWrapper,
 } from './styles';
+import { RootState } from '../../../reducers';
 
-interface availableDay {
+type availableDay = {
     label: string;
     value: string;
-}
+};
 
 const RegisterForm = () => {
     const dispatch = useDispatch();
-    const { accessToken } = useSelector((state) => state.user);
+    const { accessToken } = useSelector((state: RootState) => state.user);
 
     // 가능 지역
     const [location, setLocation] = useState('');
@@ -30,7 +32,7 @@ const RegisterForm = () => {
         setLocation(value);
     }, []);
     // 가능 요일
-    const [availableDays, setAvailableDays] = useState<Array<availableDay>>([]);
+    const [availableDays, setAvailableDays] = useState<Array<CheckboxValueType>>([]);
     const availableDaysOptions = useMemo(
         (): Array<availableDay> => [
             { label: '월 오전', value: 'Monday am' },
@@ -50,7 +52,7 @@ const RegisterForm = () => {
         ],
         [],
     );
-    const onChangeDays = useCallback((checkedValues) => {
+    const onChangeDays = useCallback((checkedValues: CheckboxValueType[]) => {
         setAvailableDays(checkedValues);
     }, []);
 
@@ -58,13 +60,14 @@ const RegisterForm = () => {
     const [images, setImages] = useState<File[]>([]);
     const imagesInput = useRef<HTMLInputElement>(null);
     const imagesUpload = useCallback(() => {
+        if (!imagesInput.current) return;
         imagesInput.current.click();
-    }, [imagesInput.current]);
-    const onChangeImages = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    }, [imagesInput]);
+    const onChangeImages = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setImages((prev: File[]) => [...prev, ...e.target.files]);
     }, []);
     const removeImage = useCallback(
-        (name) => {
+        (name: string) => {
             const newImages = images.filter((v) => v.name !== name);
             setImages(newImages);
         },
@@ -81,7 +84,7 @@ const RegisterForm = () => {
 
     // 기관 인증
     const [isAuthorized, setIsAuthorized] = useState('');
-    const onChangeIsAuthorized = useCallback((e) => {
+    const onChangeIsAuthorized = useCallback((e: RadioChangeEvent) => {
         setIsAuthorized(e.target.value);
     }, []);
 
@@ -89,19 +92,23 @@ const RegisterForm = () => {
     const [orgAuth, setOrgAuth] = useState<File[]>([]);
     const orgAuthInput = useRef<HTMLInputElement>(null);
     const orgAuthUpload = useCallback(() => {
+        if (!orgAuthInput.current) return;
         orgAuthInput.current.click();
-    }, [orgAuthInput.current]);
-    const onChangeOrgAuth = useCallback((e) => {
+    }, [orgAuthInput]);
+    const onChangeOrgAuth = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setOrgAuth((prev) => [...prev, ...e.target.files]);
     }, []);
-    const removeOrgAuthImage = useCallback((name: string) => {
-        const newImages: File[] = orgAuth.filter((v) => v.name !== name);
-        setOrgAuth(newImages);
-    }, []);
+    const removeOrgAuthImage = useCallback(
+        (name: string) => {
+            const newImages: File[] = orgAuth.filter((v) => v.name !== name);
+            setOrgAuth(newImages);
+        },
+        [orgAuth],
+    );
 
     // 교육 이수
     const [isTrained, setIsTrained] = useState('');
-    const onChangeIsTrained = useCallback((e) => {
+    const onChangeIsTrained = useCallback((e: RadioChangeEvent) => {
         setIsTrained(e.target.value);
     }, []);
 
@@ -109,24 +116,28 @@ const RegisterForm = () => {
     const [trainingCert, setTrainingCert] = useState<File[]>([]);
     const trainingCertInput = useRef<HTMLInputElement>(null);
     const trainingCertUpload = useCallback(() => {
+        if (!trainingCertInput.current) return;
         trainingCertInput.current.click();
-    }, [trainingCertInput.current]);
-    const onChangeTrainingCert = useCallback((e) => {
+    }, [trainingCertInput]);
+    const onChangeTrainingCert = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setTrainingCert((prev) => [...prev, ...e.target.files]);
     }, []);
-    const removeTrainingCertImage = useCallback((name) => {
-        const newImages = trainingCert.filter((v) => v.name !== name);
-        setTrainingCert(newImages);
-    }, []);
+    const removeTrainingCertImage = useCallback(
+        (name: string) => {
+            const newImages = trainingCert.filter((v) => v.name !== name);
+            setTrainingCert(newImages);
+        },
+        [trainingCert],
+    );
 
     // 운전 여부
     const [isDriver, setIsDriver] = useState('');
-    const onChangeIsDriver = useCallback((e) => {
+    const onChangeIsDriver = useCallback((e: RadioChangeEvent) => {
         setIsDriver(e.target.value);
     }, []);
 
     const onSubmit = useCallback(
-        async (e: React.FormEvent<HTMLFormElement>) => {
+        async (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
 
             // string or blob 만 가능
@@ -139,19 +150,12 @@ const RegisterForm = () => {
             data.append('isAuthorized', isAuthorized);
             data.append('isTrained', isTrained);
             data.append('isDriver', isDriver);
-            for (let v of images) {
-                data.append('images', v);
-            }
-            for (let v of orgAuth) {
-                data.append('orgAuth', v);
-            }
-            for (let v of trainingCert) {
-                data.append('trainingCert', v);
-            }
-            for (let v of availableDays) {
-                data.append('availableDays', JSON.stringify(v));
-            }
-            dispatch(registerServiceRequestAction(data, accessToken));
+            images.map((v) => data.append('images', v));
+            orgAuth.map((v) => data.append('orgAuth', v));
+            trainingCert.map((v) => data.append('trainingCert', v));
+            availableDays.map((v) => data.append('availableDays', JSON.stringify(v)));
+
+            dispatch(registerServiceRequest(data, accessToken));
         },
         [
             location,
@@ -165,6 +169,8 @@ const RegisterForm = () => {
             isTrained,
             trainingCert,
             isDriver,
+            accessToken,
+            dispatch,
         ],
     );
     return (

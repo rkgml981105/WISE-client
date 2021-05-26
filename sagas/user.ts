@@ -2,51 +2,50 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import firebase from 'firebase/app';
 import { auth, googleAuthProvider, facebookAuthProvider } from '../firebase';
 import {
     LOAD_MY_INFO_REQUEST,
-    LOAD_MY_INFO_SUCCESS,
-    LOAD_MY_INFO_FAILURE,
     LOG_IN_REQUEST,
-    LOG_IN_FAILURE,
-    LOG_IN_SUCCESS,
     LOG_OUT_REQUEST,
-    LOG_OUT_FAILURE,
-    LOG_OUT_SUCCESS,
-    SIGN_UP_FAILURE,
     SIGN_UP_REQUEST,
-    SIGN_UP_SUCCESS,
     EMAIL_CHECK_REQUEST,
-    EMAIL_CHECK_SUCCESS,
-    EMAIL_CHECK_FAILURE,
-    REGISTER_SERVICE_FAILURE,
     REGISTER_SERVICE_REQUEST,
-    REGISTER_SERVICE_SUCCESS,
+    loadMyInfoFailure,
+    loadMyInfoSuccess,
+    loginSuccess,
+    loginFailure,
+    logoutSuccess,
+    logoutFailure,
+    emailCheckFailure,
+    emailCheckSuccess,
+    signupFailure,
+    signupSuccess,
+    registerServiceFailure,
+    registerServiceSuccess,
 } from '../reducers/user';
+import { User } from '../interfaces/data/user';
+import { UserAction } from '../interfaces/act/user';
 
 axios.defaults.withCredentials = true;
 
-function loadMyInfoAPI(userId) {
+function loadMyInfoAPI(userId: string) {
     return axios.get(`/api/v1/users/${userId}`);
 }
 
+type IUser = {
+    user: User;
+};
+
 function* loadMyInfo() {
     try {
-        const userId = localStorage.getItem('userId');
-        const accessToken = localStorage.getItem('accessToken');
-        const result = yield call(loadMyInfoAPI, userId);
-        yield put({
-            type: LOAD_MY_INFO_SUCCESS,
-            payload: result.data.user,
-            token: accessToken,
-        });
+        const userId = localStorage.getItem('userId') as string;
+        const accessToken = localStorage.getItem('accessToken') as string;
+        const result: AxiosResponse<IUser> = yield call(loadMyInfoAPI, userId);
+        yield put(loadMyInfoSuccess(result.data.user, accessToken));
     } catch (err) {
-        yield put({
-            type: LOAD_MY_INFO_FAILURE,
-            error: err.message,
-        });
+        yield put(loadMyInfoFailure(err.message));
     }
 }
 
@@ -54,8 +53,14 @@ function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
-async function loginToken({ email, password, signinMethod }) {
-    let result = '';
+type LoginData = {
+    email?: string;
+    password?: string;
+    signinMethod: string;
+};
+
+async function loginToken({ email, password, signinMethod }: LoginData) {
+    let result = null;
     if (signinMethod === 'password') {
         result = await auth.signInWithEmailAndPassword(email, password);
     } else if (signinMethod === 'google') {
@@ -68,7 +73,7 @@ async function loginToken({ email, password, signinMethod }) {
     return result.user.getIdToken();
 }
 
-function logInAPI(accessToken, { signinMethod }) {
+function logInAPI(accessToken: string, { signinMethod }: LoginData) {
     return axios.post(
         '/api/v1/signin',
         { signinMethod },
@@ -80,18 +85,15 @@ function logInAPI(accessToken, { signinMethod }) {
     );
 }
 
-function* logIn(action) {
+function* logIn(action: { data: LoginData }) {
     try {
         const accessToken = yield call(loginToken, action.data);
         const result = yield call(logInAPI, accessToken, action.data);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('userId', result.data.user._id);
-        yield put({
-            type: LOG_IN_SUCCESS,
-        });
+        yield put(loginSuccess());
     } catch (err) {
         let errorMessage = '';
-        console.log(err.message);
         if (err.message === 'The password is invalid or the user does not have a password.') {
             errorMessage = '비밀번호가 일치하지 않습니다.';
         } else if (
@@ -106,10 +108,7 @@ function* logIn(action) {
         } else {
             errorMessage = '동일한 이메일의 계정이 이미 존재합니다.';
         }
-        yield put({
-            type: LOG_IN_FAILURE,
-            error: errorMessage,
-        });
+        yield put(loginFailure(errorMessage));
     }
 }
 
@@ -122,14 +121,9 @@ function* logOut() {
         firebase.auth().signOut();
         localStorage.removeItem('userId');
         localStorage.removeItem('accessToken');
-        yield put({
-            type: LOG_OUT_SUCCESS,
-        });
+        yield put(logoutSuccess());
     } catch (err) {
-        yield put({
-            type: LOG_OUT_FAILURE,
-            error: err.message,
-        });
+        yield put(logoutFailure(err.message));
     }
 }
 
@@ -137,15 +131,23 @@ function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
-async function signupToken({ email, password }) {
+type SignupData = {
+    email: string;
+    password: string;
+    name?: string;
+    mobile?: string;
+    signinMethod?: string;
+};
+
+async function signupToken({ email, password }: SignupData) {
     await auth.signInWithEmailLink(email, location.href);
-    const user = auth.currentUser;
+    const user = auth.currentUser as firebase.User;
     await user.updatePassword(password);
     const accessToken = await user.getIdToken();
     return accessToken;
 }
 
-async function emailCheckAPI(email) {
+async function emailCheckAPI(email: string) {
     await axios.post('/api/v1/email-validation', {
         email,
     });
@@ -158,17 +160,12 @@ async function emailCheckAPI(email) {
     localStorage.setItem('emailForSignup', email);
 }
 
-function* emailCheck(action) {
+function* emailCheck(action: { email: string }) {
     try {
         yield call(emailCheckAPI, action.email);
-        yield put({
-            type: EMAIL_CHECK_SUCCESS,
-        });
+        yield put(emailCheckSuccess());
     } catch (err) {
-        yield put({
-            type: EMAIL_CHECK_FAILURE,
-            error: '이미 가입된 이메일 입니다.',
-        });
+        yield put(emailCheckFailure('이미 가입된 이메일 입니다.'));
     }
 }
 
@@ -176,7 +173,7 @@ function* watchEmailCheck() {
     yield takeLatest(EMAIL_CHECK_REQUEST, emailCheck);
 }
 
-function signUpAPI(accessToken, { email, name, mobile, signinMethod }) {
+function signUpAPI(accessToken: string, { email, name, mobile, signinMethod }: SignupData) {
     return axios.post(
         '/api/v1/signup',
         { email, name, mobile, signinMethod },
@@ -188,22 +185,15 @@ function signUpAPI(accessToken, { email, name, mobile, signinMethod }) {
     );
 }
 
-function* signUp(action) {
+function* signUp(action: { data: SignupData }) {
     try {
         const accessToken = yield call(signupToken, action.data);
         const result = yield call(signUpAPI, accessToken, action.data);
         localStorage.setItem('userId', result.data.user._id);
         localStorage.removeItem('emailForSignup');
-        yield put({
-            type: SIGN_UP_SUCCESS,
-            token: accessToken,
-        });
+        yield put(signupSuccess(accessToken));
     } catch (err) {
-        console.error(err);
-        yield put({
-            type: SIGN_UP_FAILURE,
-            error: err.message,
-        });
+        yield put(signupFailure(err.message));
     }
 }
 
@@ -211,11 +201,12 @@ function* watchSignUp() {
     yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
 
-function registerServiceAPI(accessToken, data) {
+function registerServiceAPI(accessToken: string, data: FormData) {
     return axios({
         method: 'POST',
         url: 'http://localhost:5000/api/v1/services',
         headers: {
+            accessToken,
             'Content-Type': 'application/x-www-form-urlencoded',
             'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
         },
@@ -223,19 +214,13 @@ function registerServiceAPI(accessToken, data) {
     });
 }
 
-function* registerService(action) {
+function* registerService(action: { data: FormData; accessToken: string }) {
     try {
         const result = yield call(registerServiceAPI, action.accessToken, action.data);
         console.log(result);
-        yield put({
-            type: REGISTER_SERVICE_SUCCESS,
-            payload: result.data.service,
-        });
+        yield put(registerServiceSuccess(result.data.service));
     } catch (err) {
-        yield put({
-            type: REGISTER_SERVICE_FAILURE,
-            error: err.message,
-        });
+        yield put(registerServiceFailure(err.message));
     }
 }
 

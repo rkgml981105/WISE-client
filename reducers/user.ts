@@ -1,3 +1,7 @@
+/* eslint-disable no-param-reassign */
+import { UserAction } from '../interfaces/act/user';
+import { ShortService } from '../interfaces/data/service';
+import { User, UserState } from '../interfaces/data/user';
 import Produce from '../utils/produce';
 
 // 액션 상수
@@ -52,11 +56,22 @@ export const initialState = {
 };
 
 // 액션 크리에이터
-export const loadMyInfo = () => ({
+export const loadMyInfoRequest = () => ({
     type: LOAD_MY_INFO_REQUEST,
 });
 
-export const loginRequestAction = (email: string, password: string) => ({
+export const loadMyInfoSuccess = (user: User, token: string) => ({
+    type: LOAD_MY_INFO_SUCCESS,
+    user,
+    token,
+});
+
+export const loadMyInfoFailure = (error: string) => ({
+    type: LOAD_MY_INFO_FAILURE,
+    error,
+});
+
+export const loginRequest = (email: string, password: string) => ({
     type: LOG_IN_REQUEST,
     data: {
         email,
@@ -65,35 +80,82 @@ export const loginRequestAction = (email: string, password: string) => ({
     },
 });
 
-export const oauthLoginRequestAction = (signinMethod: string) => ({
+export const loginSuccess = () => ({
+    type: LOG_IN_SUCCESS,
+});
+
+export const loginFailure = (error: string) => ({
+    type: LOG_IN_FAILURE,
+    error,
+});
+
+export const oauthLoginRequest = (signinMethod: string) => ({
     type: LOG_IN_REQUEST,
     data: {
         signinMethod,
     },
 });
 
-export const logoutRequestAction = () => ({
+export const logoutRequest = () => ({
     type: LOG_OUT_REQUEST,
 });
 
-export const emailCheckRequestAction = (email: string) => ({
+export const logoutSuccess = () => ({
+    type: LOG_OUT_SUCCESS,
+});
+
+export const logoutFailure = (error: string) => ({
+    type: LOG_OUT_FAILURE,
+    error,
+});
+
+export const emailCheckRequest = (email: string) => ({
     type: EMAIL_CHECK_REQUEST,
     email,
 });
 
-export const signupRequestAction = (email: string, name: string, password: string, mobile: string) => ({
+export const emailCheckSuccess = () => ({
+    type: EMAIL_CHECK_SUCCESS,
+});
+
+export const emailCheckFailure = (error: string) => ({
+    type: EMAIL_CHECK_FAILURE,
+    error,
+});
+
+export const signupRequest = (email: string, name: string, password: string, mobile: string) => ({
     type: SIGN_UP_REQUEST,
     data: { email, name, password, mobile, signinMethod: 'password' },
 });
 
-export const registerServiceRequestAction = (data, accessToken: string) => ({
+export const signupSuccess = (token: string) => ({
+    type: SIGN_UP_SUCCESS,
+    token,
+});
+
+export const signupFailure = (error: string) => ({
+    type: SIGN_UP_FAILURE,
+    error,
+});
+
+export const registerServiceRequest = (data: FormData, accessToken: string) => ({
     type: REGISTER_SERVICE_REQUEST,
     data,
     accessToken,
 });
 
-const reducer = (state = initialState, action) =>
-    Produce(state, (draft) => {
+export const registerServiceSuccess = (service: ShortService) => ({
+    type: REGISTER_SERVICE_SUCCESS,
+    service,
+});
+
+export const registerServiceFailure = (error: string) => ({
+    type: REGISTER_SERVICE_FAILURE,
+    error,
+});
+
+const reducer = (state = initialState, action: UserAction) =>
+    Produce(state, (draft: UserState) => {
         switch (action.type) {
             case LOAD_MY_INFO_REQUEST:
                 draft.loadMyInfoLoading = true;
@@ -104,7 +166,7 @@ const reducer = (state = initialState, action) =>
                 draft.loadMyInfoLoading = false;
                 draft.loadMyInfoDone = true;
                 draft.islogin = true;
-                draft.me = action.payload;
+                draft.me = action.user;
                 draft.accessToken = action.token;
                 break;
             case LOAD_MY_INFO_FAILURE:
@@ -175,7 +237,7 @@ const reducer = (state = initialState, action) =>
             case REGISTER_SERVICE_SUCCESS:
                 draft.registerServiceLoading = false;
                 draft.registerServiceDone = true;
-                draft.registerService = action.payload;
+                draft.registerService = action.service;
                 break;
             case REGISTER_SERVICE_FAILURE:
                 draft.registerServiceLoading = false;

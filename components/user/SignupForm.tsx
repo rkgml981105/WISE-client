@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { signupRequestAction } from '../../reducers/user';
+import { signupRequest } from '../../reducers/user';
 import { InputWrapper, Form, FormBtn, ErrorBox } from './styles';
 import ErrorMessage from './ErrorMessage';
 
@@ -22,34 +22,34 @@ const SignupForm = () => {
     const [mobileError, setMobileError] = useState(false);
 
     useEffect(() => {
-        setEmail(localStorage.getItem('emailForSignup'));
+        setEmail(localStorage.getItem('emailForSignup') as string);
     }, []);
 
-    const onChangeName = useCallback((e) => {
+    const onChangeName = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
         setNameError(false);
-    },[]);
+    }, []);
 
-    const onChangePassword = useCallback((e) => {
+    const onChangePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setPasswordError(false);
-    },[]);
+    }, []);
 
     const onChangePasswordCheck = useCallback(
-        (e) => {
+        (e: ChangeEvent<HTMLInputElement>) => {
             setPasswordCheck(e.target.value);
             setPasswordCheckError(e.target.value !== password);
         },
         [password],
     );
 
-    const onChangeMobile = useCallback((e) => {
+    const onChangeMobile = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setMobile(e.target.value);
         setMobileError(false);
-    },[]);
+    }, []);
 
     const onsubmit = useCallback(
-        (e) => {
+        (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             if (!name || !password || !passwordCheck || !mobile) {
                 if (!name) {
@@ -66,9 +66,9 @@ const SignupForm = () => {
                 }
                 return;
             }
-            dispatch(signupRequestAction(email, name, password, mobile));
+            dispatch(signupRequest(email, name, password, mobile));
         },
-        [email, name, password, mobile],
+        [dispatch, email, name, password, passwordCheck, mobile],
     );
     return (
         <>

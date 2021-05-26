@@ -52,17 +52,50 @@ export interface Review {
     createdAt: Date;
 }
 
+export interface Query {
+    location: string;
+    date: string;
+    time: string;
+    page: number;
+}
+
 export type ServiceState = {
-    services:
+    popularService:
         | [
               {
-                  service: ShortService[];
-                  popularService: ShortService[];
+                  popularServices: ShortService[];
               },
           ]
         | [];
+    totalService:
+        | [
+              {
+                  services: ShortService[];
+              },
+          ]
+        | [];
+    totalserviceCount: number;
+    searchService:
+        | [
+              {
+                  services: ShortService[];
+              },
+          ]
+        | [];
+    searchServiceCount: number;
+    searchQuery: Query | null;
     service: LongService | null;
     reviews: Review[] | null;
+    popularServiceLoading: boolean;
+    popularServiceDone: boolean;
+    popularServiceError: null | Error;
+    totalServiceLoading: boolean;
+    totalServiceDone: boolean;
+    totalServiceError: null | Error;
+    searchServiceLoading: boolean;
+    searchServiceDone: boolean;
+    searchServiceError: null | Error;
+
     loadAllServicesLoading: boolean;
     loadAllServicesDone: boolean;
     loadAllServicesError: null | Error;

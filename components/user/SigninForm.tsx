@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { loginRequestAction } from '../../reducers/user';
+import { RootState } from '../../reducers';
+import { loginRequest } from '../../reducers/user';
 import ErrorMessage from './ErrorMessage';
 import Oauth from './Oauth';
 import { InputWrapper, Form, FormBtn, ErrorBox } from './styles';
 
 const SigninForm = () => {
     const dispatch = useDispatch();
-    const { logInError } = useSelector((state) => state.user);
+    const { logInError } = useSelector((state: RootState) => state.user);
 
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -24,18 +25,18 @@ const SigninForm = () => {
         setLoginErrMsg('');
     }, []);
 
-    const onChangeEmail = useCallback((e) => {
+    const onChangeEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
         setEmailError(false);
     }, []);
 
-    const onChangePassword = useCallback((e) => {
+    const onChangePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setPasswordError(false);
     }, []);
 
     const onsubmit = useCallback(
-        (e) => {
+        (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             if (!email || !password) {
                 if (!email) {
@@ -46,9 +47,9 @@ const SigninForm = () => {
                 }
                 return;
             }
-            dispatch(loginRequestAction(email, password));
+            dispatch(loginRequest(email, password));
         },
-        [email, password],
+        [dispatch, email, password],
     );
 
     return (

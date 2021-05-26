@@ -36,33 +36,70 @@ import {
     CHECK_OUT_REQUEST,
     CHECK_OUT_SUCCESS,
     CHECK_OUT_FAILURE,
+    loadPopularServiceFailure,
+    loadPopularServiceSuccess,
+    loadSearchServiceFailure,
+    loadSearchServiceSuccess,
+    loadTotalServiceFailure,
+    loadTotalServiceSuccess,
+    LOAD_POPULAR_SERVICE_REQUEST,
+    LOAD_SEARCH_SERVICE_REQUEST,
+    LOAD_TOTAL_SERVICE_REQUEST,
 } from '../reducers/service';
 
-function loadServicesAPI(accessToken: string) {
-    return axios.get('api/v1/services', {
-        headers: {
-            accessToken,
-        },
-    });
+function loadPopularServiceAPI() {
+    return axios.get('/api/v1/services/popularity');
 }
 
-function* loadServices(action: { accessToken: string }) {
+function* loadPopularService() {
     try {
-        const result: AxiosResponse<{ data: { services: [data.ShortService] } }> = yield call(
-            loadServicesAPI,
-            action.accessToken,
-        );
-        yield put({
-            type: LOAD_ALL_SERVICES_SUCCESS,
-            payload: result.data,
-        });
+        const result = yield call(loadPopularServiceAPI);
+        yield put(loadPopularServiceSuccess(result.data.popularService));
     } catch (err) {
-        console.error(err);
-        yield put({
-            type: LOAD_ALL_SERVICES_FAILURE,
-            error: err.response.data,
-        });
+        yield put(loadPopularServiceFailure(err.message));
     }
+}
+
+function* watchLoadPopularService() {
+    yield takeLatest(LOAD_POPULAR_SERVICE_REQUEST, loadPopularService);
+}
+
+function loadTotalServiceAPI(page: string) {
+    return axios.get(`/api/v1/services/all?page=${page}`);
+}
+
+function* loadTotalService(action) {
+    try {
+        const result = yield call(loadTotalServiceAPI, action.page);
+        console.log('action.page :', action.page);
+        console.log(result.data);
+        yield put(loadTotalServiceSuccess(result.data.service, result.data.totalServices - 8));
+    } catch (err) {
+        yield put(loadTotalServiceFailure(err.message));
+    }
+}
+
+function* watchLoadTotalService() {
+    yield throttle(5000, LOAD_TOTAL_SERVICE_REQUEST, loadTotalService);
+}
+
+function loadSearchServiceAPI(query: data.Query) {
+    console.log('query : ', query);
+    const { location, date, time, page } = query;
+    return axios.get(`/api/v1/services/?location=${location}&date=${date}&time=${time}&page=${page}`);
+}
+
+function* loadSearchService(action) {
+    try {
+        const result = yield call(loadSearchServiceAPI, action.query);
+        yield put(loadSearchServiceSuccess(result.data.service, result.data.totalServices, action.query));
+    } catch (err) {
+        yield put(loadSearchServiceFailure(err.message));
+    }
+}
+
+function* watchLoadSearchService() {
+    yield throttle(5000, LOAD_SEARCH_SERVICE_REQUEST, loadSearchService);
 }
 
 function getSingleServiceAPI(serviceId: string) {
@@ -286,10 +323,6 @@ function* reservationReject(action: { orderId: string; accessToken: string }) {
     }
 }
 
-function* watchLoadServices() {
-    yield takeLatest(LOAD_ALL_SERVICES_REQUEST, loadServices);
-}
-
 function* watchGetSingleService() {
     yield takeLatest(GET_SERVICE_INFO_REQUEST, getSingleService);
 }
@@ -324,7 +357,9 @@ function* watchReservationReject() {
 
 export default function* serviceSaga() {
     yield all([
-        fork(watchLoadServices),
+        fork(watchLoadPopularService),
+        fork(watchLoadTotalService),
+        fork(watchLoadSearchService),
         fork(watchGetSingleService),
         fork(watchLoadFirstReviews),
         fork(watchLoadMoreReviews),

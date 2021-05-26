@@ -1,8 +1,8 @@
-import { Button, DatePicker, Radio, Select } from 'antd';
+import { Button, DatePicker, Radio, RadioChangeEvent, Select } from 'antd';
 import styled from 'styled-components';
 import { SearchOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
 import useInput from '../hooks/useInput';
@@ -13,14 +13,14 @@ const SearchBar = () => {
     const dispatch = useDispatch();
 
     const [location, setLocation] = useState('');
-    const [date, setDate] = useState([]);
-    const [time, onChangeTime] = useInput('am');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('am');
 
-    const onChangeLocation = (value) => {
+    const onChangeLocation = useCallback((value: string) => {
         setLocation(value);
-    };
+    }, []);
 
-    const onSearch = () => {
+    const onSearch = useCallback(() => {
         console.log(`location : ${location}, date : ${date}, time : ${time}`);
         dispatch(
             loadSearchServiceRequestAction({
@@ -31,11 +31,15 @@ const SearchBar = () => {
             }),
         );
         router.push('/searchResult');
-    };
+    }, [location, date, time, dispatch, router]);
 
-    function onChange(value, dateString) {
+    const onChangeDate = useCallback((value: any, dateString: string) => {
         setDate(dateString);
-    }
+    }, []);
+
+    const onChangeTime = useCallback((e: RadioChangeEvent) => {
+        setTime(e.target.value);
+    }, []);
 
     return (
         <Wrapper>
@@ -54,7 +58,7 @@ const SearchBar = () => {
                     <Select.Option value="서울시 강서구">서울시 강서구</Select.Option>
                     <Select.Option value="서울시 송파구">서울시 송파구</Select.Option>
                 </Select>
-                <DatePicker onChange={onChange} />
+                <DatePicker onChange={onChangeDate} />
                 <Radio.Group onChange={onChangeTime} defaultValue="am" size="middle">
                     <Radio.Button value="am">오전</Radio.Button>
                     <Radio.Button value="pm">오후</Radio.Button>

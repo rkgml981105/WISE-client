@@ -3,15 +3,29 @@
 
 // import { ActionRequest } from '../interfaces/act/services';
 import { IActionsService } from '../interfaces/act/service';
-import { ServiceState } from '../interfaces/data/service';
+import { Query, ServiceState, ShortService } from '../interfaces/data/service';
 
 import Produce from '../utils/produce';
 
 /* ------- initial state ------ */
 export const initialState: ServiceState = {
-    services: [],
+    popularService: [],
+    totalService: [],
+    totalserviceCount: 0,
+    searchService: [],
+    searchServiceCount: 0,
+    searchQuery: null,
     service: null,
-    reviews: null,
+    reviews: [],
+    popularServiceLoading: false, // 인기 서비스 불러오기
+    popularServiceDone: false,
+    popularServiceError: null,
+    totalServiceLoading: false, // 전체 서비스 불러오기
+    totalServiceDone: false,
+    totalServiceError: null,
+    searchServiceLoading: false, // 검색 서비스 불러오기
+    searchServiceDone: false,
+    searchServiceError: null,
     loadAllServicesLoading: false,
     loadAllServicesDone: false,
     loadAllServicesError: null,
@@ -55,10 +69,20 @@ export const LOAD_MORE_REVIEWS_REQUEST = 'LOAD_MORE_REVIEWS_REQUEST';
 export const LOAD_MORE_REVIEWS_SUCCESS = 'LOAD_MORE_REVIEWS_SUCCESS';
 export const LOAD_MORE_REVIEWS_FAILURE = 'LOAD_MORE_REVIEWS_FAILURE';
 
-// 모든 서비스 정보
-export const LOAD_ALL_SERVICES_REQUEST = 'LOAD_ALL_SERVICES_REQUEST';
-export const LOAD_ALL_SERVICES_SUCCESS = 'LOAD_ALL_SERVICES_SUCCESS';
-export const LOAD_ALL_SERVICES_FAILURE = 'LOAD_ALL_SERVICES_FAILURE';
+// 인기 서비스 요청
+export const LOAD_POPULAR_SERVICE_REQUEST = 'LOAD_POPULAR_SERVICE_REQUEST';
+export const LOAD_POPULAR_SERVICE_SUCCESS = 'LOAD_POPULAR_SERVICE_SUCCESS';
+export const LOAD_POPULAR_SERVICE_FAILURE = 'LOAD_POPULAR_SERVICE_FAILURE';
+
+// 전체 서비스 요청
+export const LOAD_TOTAL_SERVICE_REQUEST = 'LOAD_TOTAL_SERVICE_REQUEST';
+export const LOAD_TOTAL_SERVICE_SUCCESS = 'LOAD_TOTAL_SERVICE_SUCCESS';
+export const LOAD_TOTAL_SERVICE_FAILURE = 'LOAD_TOTAL_SERVICE_FAILURE';
+
+// 검색 서비스 요청
+export const LOAD_SEARCH_SERVICE_REQUEST = 'LOAD_SEARCH_SERVICE_REQUEST';
+export const LOAD_SEARCH_SERVICE_SUCCESS = 'LOAD_SEARCH_SERVICE_SUCCESS';
+export const LOAD_SEARCH_SERVICE_FAILURE = 'LOAD_SEARCH_SERVICE_FAILURE';
 
 // 날짜, 지역, 시간 (오전/오후), 픽업장소, 병원, 소요 시간(ex. 3시간) post 요청
 export const CREATE_RESERVATION_REQUEST = 'CREATE_RESERVATION_REQUEST';
@@ -88,23 +112,110 @@ export const CHECK_OUT_SUCCESS = 'CHECK_OUT_SUCCESS';
 export const CHECK_OUT_FAILURE = 'CHECK_OUT_FAILURE';
 
 /* ------- reducer ------ */
+export const loadPopularServiceRequest = () => ({
+    type: LOAD_POPULAR_SERVICE_REQUEST,
+});
+
+export const loadPopularServiceSuccess = (popularService: ShortService) => ({
+    type: LOAD_POPULAR_SERVICE_SUCCESS,
+    popularService,
+});
+
+export const loadPopularServiceFailure = (error: string) => ({
+    type: LOAD_POPULAR_SERVICE_FAILURE,
+    error,
+});
+
+export const loadTotalServiceRequest = (page = 1) => ({
+    type: LOAD_TOTAL_SERVICE_REQUEST,
+    page,
+});
+
+export const loadTotalServiceSuccess = (totalService: ShortService[], totalServiceCount: number) => ({
+    type: LOAD_TOTAL_SERVICE_SUCCESS,
+    totalService,
+    totalServiceCount,
+});
+
+export const loadTotalServiceFailure = (error: string) => ({
+    type: LOAD_TOTAL_SERVICE_FAILURE,
+    error,
+});
+
+export const loadSearchServiceRequest = (query: Query) => ({
+    type: LOAD_SEARCH_SERVICE_REQUEST,
+    query,
+});
+
+export const loadSearchServiceSuccess = (
+    searchService: ShortService[],
+    searchServiceCount: number,
+    searchQuery: Query,
+) => ({
+    type: LOAD_SEARCH_SERVICE_SUCCESS,
+    searchService,
+    searchServiceCount,
+    searchQuery,
+});
+
+export const loadSearchServiceFailure = (error: string) => ({
+    type: LOAD_SEARCH_SERVICE_FAILURE,
+    error,
+});
+
 const reducer = (state = initialState, action: IActionsService) =>
     Produce(state, (draft: ServiceState) => {
         switch (action.type) {
-            // case LOAD_ALL_SERVICES_REQUEST:
-            //     draft.loadAllServicesLoading = true;
-            //     draft.loadAllServicesDone = false;
-            //     draft.loadAllServicesError = null;
-            //     break;
-            // case LOAD_ALL_SERVICES_SUCCESS:
-            //     draft.loadAllServicesLoading = false;
-            //     draft.loadAllServicesDone = true;
-            //     draft.services = action.payload;
-            //     break;
-            // case LOAD_ALL_SERVICES_FAILURE:
-            //     draft.loadAllServicesLoading = false;
-            //     draft.loadAllServicesError = action.error;
-            //     break;
+            case LOAD_POPULAR_SERVICE_REQUEST:
+                draft.popularServiceLoading = true;
+                draft.popularServiceDone = false;
+                draft.popularServiceError = null;
+                break;
+            case LOAD_POPULAR_SERVICE_SUCCESS:
+                draft.popularServiceLoading = false;
+                draft.popularServiceDone = true;
+                draft.popularService = action.popularService;
+                break;
+            case LOAD_POPULAR_SERVICE_FAILURE:
+                draft.popularServiceLoading = false;
+                draft.popularServiceError = action.error;
+                break;
+            case LOAD_TOTAL_SERVICE_REQUEST:
+                draft.totalServiceLoading = true;
+                draft.totalServiceDone = false;
+                draft.totalServiceError = null;
+                break;
+            case LOAD_TOTAL_SERVICE_SUCCESS:
+                draft.totalServiceLoading = false;
+                draft.totalServiceDone = true;
+                draft.totalService = draft.totalService.concat(action.totalService);
+                draft.totalServiceCount = action.totalServiceCount;
+                break;
+            case LOAD_TOTAL_SERVICE_FAILURE:
+                draft.totalServiceLoading = false;
+                draft.totalServiceError = action.error;
+                break;
+            case LOAD_SEARCH_SERVICE_REQUEST:
+                draft.searchServiceLoading = true;
+                draft.searchServiceDone = false;
+                draft.searchServiceError = null;
+                break;
+            case LOAD_SEARCH_SERVICE_SUCCESS: {
+                draft.searchServiceLoading = false;
+                draft.searchServiceDone = true;
+                if (action.searchQuery.page === 1) {
+                    draft.searchService = action.searchService;
+                } else {
+                    draft.searchService = draft.searchService.concat(action.searchService);
+                }
+                draft.searchServiceCount = action.searchServiceCount;
+                draft.searchQuery = action.searchQuery;
+                break;
+            }
+            case LOAD_SEARCH_SERVICE_FAILURE:
+                draft.searchServiceLoading = false;
+                draft.searchServiceError = action.error;
+                break;
             case GET_SERVICE_INFO_REQUEST:
                 draft.getSingleServiceLoading = true;
                 draft.getSingleServiceDone = false;
