@@ -1,32 +1,32 @@
 import { GET_SERVICE_INFO_REQUEST, GET_SERVICE_INFO_SUCCESS, GET_SERVICE_INFO_FAILURE, LOAD_FIRST_REVIEWS_REQUEST, LOAD_FIRST_REVIEWS_SUCCESS, LOAD_FIRST_REVIEWS_FAILURE, LOAD_MORE_REVIEWS_REQUEST, LOAD_MORE_REVIEWS_SUCCESS, LOAD_MORE_REVIEWS_FAILURE, CREATE_RESERVATION_REQUEST, CREATE_RESERVATION_SUCCESS, CREATE_RESERVATION_FAILURE, GET_RESERVATION_INFO_REQUEST, GET_RESERVATION_INFO_SUCCESS, GET_RESERVATION_INFO_FAILURE, RESERVATION_ACCEPT_REQUEST, RESERVATION_ACCEPT_SUCCESS, RESERVATION_ACCEPT_FAILURE, RESERVATION_REJECT_REQUEST, RESERVATION_REJECT_SUCCESS, RESERVATION_REJECT_FAILURE, CHECK_OUT_REQUEST, CHECK_OUT_SUCCESS, LOAD_POPULAR_SERVICE_FAILURE, LOAD_POPULAR_SERVICE_REQUEST, LOAD_POPULAR_SERVICE_SUCCESS, LOAD_SEARCH_SERVICE_FAILURE, LOAD_SEARCH_SERVICE_REQUEST, LOAD_SEARCH_SERVICE_SUCCESS, LOAD_TOTAL_SERVICE_FAILURE, LOAD_TOTAL_SERVICE_REQUEST, LOAD_TOTAL_SERVICE_SUCCESS } from '../interfaces/act/services';
 import { LongService, Review, ShortService, Order, Query } from '../interfaces/data/service';
 
-export const loadPopularServiceRequest = () => ({
+export const loadPopularServicesRequest = () => ({
     type: LOAD_POPULAR_SERVICE_REQUEST,
 });
 
-export const loadPopularServiceSuccess = (popularService: ShortService) => ({
+export const loadPopularServicesSuccess = (popularServices: ShortService[]) => ({
     type: LOAD_POPULAR_SERVICE_SUCCESS,
-    popularService,
+    popularServices,
 });
 
-export const loadPopularServiceFailure = (error: string) => ({
+export const loadPopularServicesFailure = (error: string) => ({
     type: LOAD_POPULAR_SERVICE_FAILURE,
     error,
 });
 
-export const loadTotalServiceRequest = (page = 1) => ({
+export const loadTotalServicesRequest = (page = 1) => ({
     type: LOAD_TOTAL_SERVICE_REQUEST,
     page,
 });
 
-export const loadTotalServiceSuccess = (totalService: ShortService[], totalServiceCount: number) => ({
+export const loadTotalServicesSuccess = (totalService: ShortService[], totalServiceCount: number) => ({
     type: LOAD_TOTAL_SERVICE_SUCCESS,
     totalService,
     totalServiceCount,
 });
 
-export const loadTotalServiceFailure = (error: string) => ({
+export const loadTotalServicesFailure = (error: string) => ({
     type: LOAD_TOTAL_SERVICE_FAILURE,
     error,
 });

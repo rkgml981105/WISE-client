@@ -47,6 +47,8 @@ import {
     loadTotalServiceFailure,
     loadSearchServiceSuccess,
     loadSearchServiceFailure,
+    loadTotalServicesRequest,
+    loadSearchServiceRequest,
 } from '../actions/service';
 
 function loadPopularServiceAPI() {
@@ -55,8 +57,8 @@ function loadPopularServiceAPI() {
 
 function* loadPopularService() {
     try {
-        const result: AxiosResponse<{}> = yield call(loadPopularServiceAPI);
-        yield put(loadPopularServiceSuccess(result.data.popularService));
+        const result: AxiosResponse<{ popularServices: data.ShortService[] }> = yield call(loadPopularServiceAPI);
+        yield put(loadPopularServiceSuccess(result.data.popularServices));
     } catch (err) {
         yield put(loadPopularServiceFailure(err.message));
     }
@@ -66,27 +68,30 @@ function loadTotalServiceAPI(page: string) {
     return axios.get(`/api/v1/services/all?page=${page}`);
 }
 
-function* loadTotalService(action) {
+function* loadTotalService(action: ReturnType<typeof loadTotalServicesRequest>) {
     try {
-        const result = yield call(loadTotalServiceAPI, action.page);
-        console.log('action.page :', action.page);
-        console.log(result.data);
-        yield put(loadTotalServiceSuccess(result.data.service, result.data.totalServices - 8));
+        const result: AxiosResponse<{ services: data.ShortService[]; totalServices: number }> = yield call(
+            loadTotalServiceAPI,
+            action.page,
+        );
+        yield put(loadTotalServiceSuccess(result.data.services, result.data.totalServices - 8));
     } catch (err) {
         yield put(loadTotalServiceFailure(err.message));
     }
 }
 
 function loadSearchServiceAPI(query: data.Query) {
-    console.log('query : ', query);
     const { location, date, time, page } = query;
     return axios.get(`/api/v1/services/?location=${location}&date=${date}&time=${time}&page=${page}`);
 }
 
-function* loadSearchService(action) {
+function* loadSearchService(action: ReturnType<typeof loadSearchServiceRequest>) {
     try {
-        const result = yield call(loadSearchServiceAPI, action.query);
-        yield put(loadSearchServiceSuccess(result.data.service, result.data.totalServices, action.query));
+        const result: AxiosResponse<{ services: data.ShortService[]; totalServices: number }> = yield call(
+            loadSearchServiceAPI,
+            action.query,
+        );
+        yield put(loadSearchServiceSuccess(result.data.services, result.data.totalServices, action.query));
     } catch (err) {
         yield put(loadSearchServiceFailure(err.message));
     }
