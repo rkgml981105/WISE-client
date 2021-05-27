@@ -200,10 +200,16 @@ export const reservationRejectFailure = (error: string) => ({
     error,
 });
 
-export const checkoutRequest = (orderId: string, impUid: string | string[], accessToken: string) => ({
+export const checkoutRequest = (
+    orderId: string,
+    impUid: string | string[],
+    orderName: string,
+    accessToken: string,
+) => ({
     type: CHECK_OUT_REQUEST,
     orderId,
     impUid,
+    orderName,
     accessToken,
 });
 export const checkoutSuccess = (status: string, message: string) => ({
