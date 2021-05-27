@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import React, { useRef, useState } from 'react';
@@ -35,7 +35,8 @@ const ServiceDetail = () => {
     // const { id } = router.query;
     // console.log(id);
 
-    const { service, review } = useSelector((state: RootState) => state.service);
+    // TODO: review import
+    const { service } = useSelector((state: RootState) => state.service);
 
     // carousel
     const slider = useRef<HTMLInputElement>(null);
@@ -81,7 +82,8 @@ const ServiceDetail = () => {
                                     </CarouselCon>
                                     <Navigation _id={service._id} />
                                     <Description service={service} />
-                                    <ReviewComponent review={review} />
+                                    {/* <ReviewComponent review={review} /> */}
+                                    <ReviewComponent />
                                     <FAQ />
                                     <Refund />
                                 </Detail>
