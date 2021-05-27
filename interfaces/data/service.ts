@@ -30,8 +30,8 @@ export interface LongService {
 
 export interface Order {
     _id: string;
-    customer: { id: string; name: string };
-    assistant: { id: string; name: string };
+    customer: { _id: string; name: string; mobile: string };
+    assistant: { _id: string; name: string; mobile?: string };
     service: string;
     pickup: string;
     content: string;
