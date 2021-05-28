@@ -3,14 +3,15 @@ import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import ServiceCard from './ServiceCard';
-import { RootState } from '../reducers';
-import { ShortService } from '../interfaces/data/service';
+import { ShortService } from '../../interfaces/data/service';
+import { RootState } from '../../reducers';
 
 type TotalSectionProps = {
     title: string;
+    searchQuery: { date: string; location: string; page: number; time: string };
 };
 
-const TotalSection = ({ title }: TotalSectionProps) => {
+const TotalSection = ({ title, searchQuery }: TotalSectionProps) => {
     const { totalServices, searchServices } = useSelector((state: RootState) => state.service);
 
     return (
@@ -20,7 +21,7 @@ const TotalSection = ({ title }: TotalSectionProps) => {
                 {title === '검색 결과'
                     ? searchServices.map((ele: ShortService) => (
                           <Col key={ele._id} xs={24} sm={12} md={8} lg={6} span={24}>
-                              <ServiceCard service={ele} />
+                              <ServiceCard service={ele} searchQuery={searchQuery} />
                           </Col>
                       ))
                     : totalServices.map((ele: ShortService) => (
