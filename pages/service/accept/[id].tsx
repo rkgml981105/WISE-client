@@ -1,20 +1,17 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-import { END } from 'redux-saga';
-import React, { useEffect } from 'react';
 
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import Layout from '../../../components/Layout';
+import React, { useEffect } from 'react';
 import AcceptOrder from '../../../components/AcceptOrder';
-import { GET_RESERVATION_INFO_REQUEST } from '../../../interfaces/act/service';
-import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
+import Layout from '../../../layout/Layout';
 import { getReservationInfoRequest } from '../../../actions/service';
 import Loading from '../../../components/Loading';
-import ReservationInfo from '../../../components/ReservationInfo';
-import { ActionButton, WarningBox } from '../../../components/button-style';
+import { ActionButton, WarningBox } from '../../../components/style';
+import ReservationInfo from '../../../components/reservation/ReservationInfo';
 
 const Global = createGlobalStyle`
     footer {

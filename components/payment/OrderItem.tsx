@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
-import { Order } from '../interfaces/data/service';
-import { CancelButton } from './button-style';
+import React from 'react';
+import { CancelButton } from '../style';
+import { Order } from '../../interfaces/data/service';
 
 type Props = {
     reservationInfo: Order;

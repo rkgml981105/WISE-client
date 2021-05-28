@@ -3,9 +3,9 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Link from 'next/link';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { ActionButton, WarningBox } from '../../../components/button-style';
-import Layout from '../../../components/Layout';
-import PaymentResult from '../../../components/PaymentResult';
+import { WarningBox, ActionButton } from '../../../components/style';
+import Layout from '../../../layout/Layout';
+import PaymentResult from '../../../components/payment/PaymentResult';
 
 const Global = createGlobalStyle`
     footer {

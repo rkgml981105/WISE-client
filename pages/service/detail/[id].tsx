@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import { GetServerSideProps } from 'next';
-import Layout from '../../../components/Layout';
 import Navigation from '../../../components/ServiceDetail/Navigation';
 import Summary from '../../../components/ServiceDetail/Summary';
 import Description from '../../../components/ServiceDetail/Description';
@@ -15,6 +14,7 @@ import FAQ from '../../../components/ServiceDetail/FAQ';
 import Refund from '../../../components/ServiceDetail/Refund';
 import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
+import Layout from '../../../layout/Layout';
 import Swiper from '../../../components/ServiceDetail/Swiper';
 
 const Global = createGlobalStyle`
