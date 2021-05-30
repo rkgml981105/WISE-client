@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Button, DatePicker, Radio, RadioChangeEvent, Select } from 'antd';
 import styled from 'styled-components';
 import { SearchOutlined } from '@ant-design/icons';
@@ -12,11 +13,9 @@ const SearchBar = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { searchQuery } = useSelector((state: RootState) => state.service);
-
-    const [location, setLocation] = useState(searchQuery?.location || '');
-    const [date, setDate] = useState(searchQuery?.date || '');
-    const [time, setTime] = useState(searchQuery?.time || 'am');
+    const [location, setLocation] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('am');
 
     const onChangeLocation = useCallback((value: string) => {
         setLocation(value);
@@ -43,6 +42,8 @@ const SearchBar = () => {
         setTime(e.target.value);
     }, []);
 
+    const disabledDate = (current: any) => current && current < moment().endOf('day');
+
     return (
         <Wrapper>
             <h2>어시스턴트 찾기</h2>
@@ -54,15 +55,14 @@ const SearchBar = () => {
                     style={{ width: 150 }}
                     placeholder="위치 입력"
                     optionFilterProp="children"
-                    value={searchQuery?.location}
                 >
                     <Select.Option value="서울시 성동구">서울시 성동구</Select.Option>
                     <Select.Option value="서울시 종로구">서울시 종로구</Select.Option>
                     <Select.Option value="서울시 강서구">서울시 강서구</Select.Option>
                     <Select.Option value="서울시 송파구">서울시 송파구</Select.Option>
                 </Select>
-                <DatePicker onChange={onChangeDate} />
-                <Radio.Group onChange={onChangeTime} value={searchQuery?.time || time} size="middle">
+                <DatePicker onChange={onChangeDate} disabledDate={disabledDate} />
+                <Radio.Group onChange={onChangeTime} size="middle">
                     <Radio.Button value="am">오전</Radio.Button>
                     <Radio.Button value="pm">오후</Radio.Button>
                 </Radio.Group>

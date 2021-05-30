@@ -17,9 +17,8 @@ import { RootState } from '../../reducers';
 
 const Mypage = () => {
     const dispatch = useDispatch();
-    const { accessToken, me, customerProgressOrders, customerCompleteOrders } = useSelector(
-        (state: RootState) => state.user,
-    );
+    const { accessToken, me } = useSelector((state: RootState) => state.user);
+    const { customerProgressOrders, customerCompleteOrders } = useSelector((state: RootState) => state.order);
     const [tap, setTap] = useState(1);
 
     const onClickTap = (idx: number) => {
