@@ -3,10 +3,11 @@ import styled, { createGlobalStyle } from 'styled-components';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import { loadMyInfoRequest } from '../../actions/user';
+
 import RegisterForm from '../../components/Assistant/RegisterForm';
 import { RootState } from '../../reducers';
 import Layout from '../../layout/Layout';
+import { loadProfileRequest } from '../../actions/user';
 
 const Global = createGlobalStyle`
     footer {
@@ -23,7 +24,7 @@ const Register = () => {
         if (!me) {
             const userId = localStorage.getItem('userId');
             if (userId) {
-                dispatch(loadMyInfoRequest());
+                dispatch(loadProfileRequest());
             } else {
                 Router.replace('/user/signin');
             }

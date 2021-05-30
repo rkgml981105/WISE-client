@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CancelButton, ActionButton } from '../style';
-import { CREATE_RESERVATION_REQUEST } from '../../interfaces/act/service';
 import ReservationSuccessModal from './ReservationSuccessModal';
-import { LongService } from '../../interfaces/data/service';
 import { RootState } from '../../reducers';
+import { Service } from '../../interfaces/data/service';
+import { addOrderRequest } from '../../actions/order';
 
 type Props = {
-    service: LongService;
+    service: Service;
     hours: number;
     handleChangehours: (value: number) => void;
 };
@@ -18,7 +18,7 @@ type Props = {
 const Reservation = ({ service, hours, handleChangehours }: Props) => {
     const dispatch = useDispatch();
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const { reservationRequestDone, reservationRequestError } = useSelector((state: RootState) => state.service);
+    const { addOrderDone, addOrderError } = useSelector((state: RootState) => state.order);
 
     const onChangehours = useCallback(
         (e) => {
@@ -59,32 +59,29 @@ const Reservation = ({ service, hours, handleChangehours }: Props) => {
     }, []);
 
     useEffect(() => {
-        console.log('reservation error', reservationRequestError);
-        if (reservationRequestDone || reservationRequestError) {
+        console.log('reservation error', addOrderError);
+        if (addOrderDone || addOrderError) {
             setShowModal((state) => !state);
             console.log('modal open!');
         }
-    }, [reservationRequestDone, reservationRequestError]);
+    }, [addOrderDone, addOrderError]);
 
     const onSubmit = useCallback(
         (e) => {
             e.preventDefault();
-            dispatch({
-                type: CREATE_RESERVATION_REQUEST,
-                accessToken,
-                data: {
-                    hospital,
-                    hours,
-                    pickup,
-                    content,
-                    message,
-                    serviceId: service._id,
-                    state: 'apply',
-                    date: new Date().toDateString(),
-                    time: 'am',
-                    totalPayment: hours * service.wage,
-                },
-            });
+            const data = {
+                hospital,
+                hours,
+                pickup,
+                content,
+                message,
+                serviceId: service._id,
+                state: 'apply',
+                date: new Date().toDateString(),
+                time: 'am',
+                totalPayment: hours * service.wage,
+            };
+            dispatch(addOrderRequest(accessToken, data));
         },
         [hospital, pickup, content, message, service._id, hours, accessToken, dispatch, service.wage],
     );
@@ -177,11 +174,7 @@ const Reservation = ({ service, hours, handleChangehours }: Props) => {
                 <CancelButton>취소하기</CancelButton>
             </Link>
             {showModal && (
-                <ReservationSuccessModal
-                    onClose={onCloseModal}
-                    success={reservationRequestDone}
-                    error={reservationRequestError}
-                />
+                <ReservationSuccessModal onClose={onCloseModal} success={addOrderDone} error={addOrderError} />
             )}
         </Wrapper>
     );

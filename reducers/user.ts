@@ -1,39 +1,33 @@
 /* eslint-disable no-param-reassign */
 import produce from 'immer';
 import {
-    EDIT_PROFILE_FAILURE,
-    EDIT_PROFILE_REQUEST,
-    EDIT_PROFILE_SUCCESS,
-    EMAIL_CHECK_FAILURE,
-    EMAIL_CHECK_REQUEST,
-    EMAIL_CHECK_SUCCESS,
-    LOAD_MY_INFO_FAILURE,
-    LOAD_MY_INFO_REQUEST,
-    LOAD_MY_INFO_SUCCESS,
-    LOAD_ORDERS_FAILURE,
-    LOAD_ORDERS_REQUEST,
-    LOAD_ORDERS_SUCCESS,
-    LOG_IN_FAILURE,
     LOG_IN_REQUEST,
     LOG_IN_SUCCESS,
-    LOG_OUT_FAILURE,
+    LOG_IN_FAILURE,
     LOG_OUT_REQUEST,
     LOG_OUT_SUCCESS,
-    REGISTER_SERVICE_FAILURE,
-    REGISTER_SERVICE_REQUEST,
-    REGISTER_SERVICE_SUCCESS,
-    SIGN_UP_FAILURE,
+    LOG_OUT_FAILURE,
+    EMAIL_CHECK_REQUEST,
+    EMAIL_CHECK_SUCCESS,
+    EMAIL_CHECK_FAILURE,
     SIGN_UP_REQUEST,
     SIGN_UP_SUCCESS,
-    UserAction,
-} from '../interfaces/act/user';
+    SIGN_UP_FAILURE,
+    LOAD_PROFILE_REQUEST,
+    LOAD_PROFILE_SUCCESS,
+    LOAD_PROFILE_FAILURE,
+    CHANGE_PROFILE_REQUEST,
+    CHANGE_PROFILE_SUCCESS,
+    CHANGE_PROFILE_FAILURE,
+} from '../actions/user';
+import { UserAction } from '../interfaces/act/user';
 import { UserState } from '../interfaces/data/user';
 
 // initial state
-export const initialState = {
-    loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
-    loadMyInfoDone: false,
-    loadMyInfoError: null,
+export const initialState: UserState = {
+    me: null,
+    islogin: false,
+    accessToken: null,
     logInLoading: false, // 로그인
     logInDone: false,
     logInError: null,
@@ -46,46 +40,17 @@ export const initialState = {
     signUpLoading: false, // 회원가입
     signUpDone: false,
     signUpError: null,
-    registerServiceLoading: false, // 어시스턴트 등록
-    registerServiceDone: false,
-    registerServiceError: null,
-    loadOrdersLoading: false, // 유저 주문내역
-    loadOrdersDone: false,
-    loadOrdersError: null,
-    editProfileLoading: false, // 유저 프로필 수정
-    editProfileDone: false,
-    editProfileError: null,
-    accessToken: null,
-    me: null,
-    registerService: null,
-    islogin: false,
-    applyOrdersC: null,
-    acceptOrdersC: null,
-    completeOrdersC: null,
-    applyOrdersA: null,
-    acceptOrdersA: null,
-    completeOrdersA: null,
+    loadProfileLoading: false, // 프로필 조회
+    loadProfileDone: false,
+    loadProfileError: null,
+    changeProfileLoading: false, // 프로필 수정
+    changeProfileDone: false,
+    changeProfileError: null,
 };
 
 const reducer = (state = initialState, action: UserAction) =>
     produce(state, (draft: UserState) => {
         switch (action.type) {
-            case LOAD_MY_INFO_REQUEST:
-                draft.loadMyInfoLoading = true;
-                draft.loadMyInfoDone = false;
-                draft.loadMyInfoError = null;
-                break;
-            case LOAD_MY_INFO_SUCCESS:
-                draft.loadMyInfoLoading = false;
-                draft.loadMyInfoDone = true;
-                draft.islogin = true;
-                draft.me = action.user;
-                draft.accessToken = action.token;
-                break;
-            case LOAD_MY_INFO_FAILURE:
-                draft.loadMyInfoLoading = false;
-                draft.loadMyInfoError = action.error;
-                break;
             case LOG_IN_REQUEST:
                 draft.logInLoading = true;
                 draft.logInDone = false;
@@ -142,56 +107,36 @@ const reducer = (state = initialState, action: UserAction) =>
                 draft.signUpLoading = false;
                 draft.signUpError = action.error;
                 break;
-            case REGISTER_SERVICE_REQUEST:
-                draft.registerServiceLoading = true;
-                draft.registerServiceDone = false;
-                draft.registerServiceError = null;
+            case LOAD_PROFILE_REQUEST:
+                draft.loadProfileLoading = true;
+                draft.loadProfileDone = false;
+                draft.loadProfileError = null;
                 break;
-            case REGISTER_SERVICE_SUCCESS:
-                draft.registerServiceLoading = false;
-                draft.registerServiceDone = true;
-                draft.registerService = action.service;
-                break;
-            case REGISTER_SERVICE_FAILURE:
-                draft.registerServiceLoading = false;
-                draft.registerServiceError = action.error;
-                break;
-            case LOAD_ORDERS_REQUEST:
-                draft.loadOrdersLoading = true;
-                draft.loadOrdersDone = false;
-                draft.loadOrdersError = null;
-                break;
-            case LOAD_ORDERS_SUCCESS: {
-                draft.loadOrdersLoading = false;
-                draft.loadOrdersDone = true;
-                if (action.userType === 'customer') {
-                    draft.applyOrdersC = action.orders.filter((v) => v.state === 'apply');
-                    draft.acceptOrdersC = action.orders.filter((v) => v.state === 'accept');
-                    draft.completeOrdersC = action.orders.filter((v) => v.state === 'complete');
-                } else {
-                    draft.applyOrdersA = action.orders.filter((v) => v.state === 'apply');
-                    draft.acceptOrdersA = action.orders.filter((v) => v.state === 'accept');
-                    draft.completeOrdersA = action.orders.filter((v) => v.state === 'complete');
-                }
+            case LOAD_PROFILE_SUCCESS: {
+                draft.loadProfileLoading = false;
+                draft.loadProfileDone = true;
+                draft.islogin = true;
+                draft.accessToken = action.token;
+                draft.me = action.me;
                 break;
             }
-            case LOAD_ORDERS_FAILURE:
-                draft.loadOrdersLoading = false;
-                draft.loadOrdersError = action.error;
+            case LOAD_PROFILE_FAILURE:
+                draft.loadProfileLoading = false;
+                draft.loadProfileError = action.error;
                 break;
-            case EDIT_PROFILE_REQUEST:
-                draft.editProfileLoading = true;
-                draft.editProfileDone = false;
-                draft.editProfileError = null;
+            case CHANGE_PROFILE_REQUEST:
+                draft.changeProfileLoading = true;
+                draft.changeProfileDone = false;
+                draft.changeProfileError = null;
                 break;
-            case EDIT_PROFILE_SUCCESS:
-                draft.editProfileLoading = false;
-                draft.editProfileDone = true;
-                draft.me = action.user;
+            case CHANGE_PROFILE_SUCCESS:
+                draft.changeProfileLoading = false;
+                draft.changeProfileDone = true;
+                draft.me = action.me;
                 break;
-            case EDIT_PROFILE_FAILURE:
-                draft.editProfileLoading = false;
-                draft.editProfileError = action.error;
+            case CHANGE_PROFILE_FAILURE:
+                draft.changeProfileLoading = false;
+                draft.changeProfileError = action.error;
                 break;
             default:
                 break;

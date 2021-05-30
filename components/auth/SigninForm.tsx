@@ -47,7 +47,7 @@ const SigninForm = () => {
                 }
                 return;
             }
-            dispatch(loginRequest(email, password));
+            dispatch(loginRequest('password', email, password));
         },
         [dispatch, email, password],
     );

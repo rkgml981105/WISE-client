@@ -6,10 +6,10 @@ import { END } from 'redux-saga';
 
 import AssistantInfo from '../../../components/AssistantInfo';
 import Reservation from '../../../components/reservation/Reservation';
-import { GET_SERVICE_INFO_REQUEST } from '../../../interfaces/act/service';
 import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
+import { LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
 
 const Global = createGlobalStyle`
     footer {
@@ -59,7 +59,7 @@ const Wrapper = styled.div`
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
     context.store.dispatch({
-        type: GET_SERVICE_INFO_REQUEST,
+        type: LOAD_SERVICE_INFO_REQUEST,
         serviceId: context.params?.id,
     });
     context.store.dispatch(END);

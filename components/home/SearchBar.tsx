@@ -4,16 +4,19 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loadSearchServicesRequest } from '../../actions/service';
+import { RootState } from '../../reducers';
 
 const SearchBar = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const [location, setLocation] = useState('');
-    const [date, setDate] = useState('');
-    const [time, setTime] = useState('am');
+    const { searchQuery } = useSelector((state: RootState) => state.service);
+
+    const [location, setLocation] = useState(searchQuery?.location || '');
+    const [date, setDate] = useState(searchQuery?.date || '');
+    const [time, setTime] = useState(searchQuery?.time || 'am');
 
     const onChangeLocation = useCallback((value: string) => {
         setLocation(value);
@@ -51,6 +54,7 @@ const SearchBar = () => {
                     style={{ width: 150 }}
                     placeholder="위치 입력"
                     optionFilterProp="children"
+                    value={searchQuery?.location}
                 >
                     <Select.Option value="서울시 성동구">서울시 성동구</Select.Option>
                     <Select.Option value="서울시 종로구">서울시 종로구</Select.Option>
@@ -58,7 +62,7 @@ const SearchBar = () => {
                     <Select.Option value="서울시 송파구">서울시 송파구</Select.Option>
                 </Select>
                 <DatePicker onChange={onChangeDate} />
-                <Radio.Group onChange={onChangeTime} defaultValue="am" size="middle">
+                <Radio.Group onChange={onChangeTime} value={searchQuery?.time || time} size="middle">
                     <Radio.Button value="am">오전</Radio.Button>
                     <Radio.Button value="pm">오후</Radio.Button>
                 </Radio.Group>

@@ -1,54 +1,37 @@
-import {
-    LOAD_MY_INFO_REQUEST,
-    LOAD_MY_INFO_SUCCESS,
-    LOAD_MY_INFO_FAILURE,
-    LOG_IN_REQUEST,
-    LOG_IN_SUCCESS,
-    LOG_IN_FAILURE,
-    LOG_OUT_REQUEST,
-    LOG_OUT_SUCCESS,
-    LOG_OUT_FAILURE,
-    EMAIL_CHECK_REQUEST,
-    EMAIL_CHECK_SUCCESS,
-    EMAIL_CHECK_FAILURE,
-    SIGN_UP_REQUEST,
-    SIGN_UP_SUCCESS,
-    SIGN_UP_FAILURE,
-    REGISTER_SERVICE_REQUEST,
-    REGISTER_SERVICE_SUCCESS,
-    REGISTER_SERVICE_FAILURE,
-    LOAD_ORDERS_REQUEST,
-    LOAD_ORDERS_SUCCESS,
-    LOAD_ORDERS_FAILURE,
-    EDIT_PROFILE_REQUEST,
-    EDIT_PROFILE_FAILURE,
-    EDIT_PROFILE_SUCCESS,
-} from '../interfaces/act/user';
-import { Order, ShortService } from '../interfaces/data/service';
-import { User } from '../interfaces/data/user';
+import { Me } from '../interfaces/data/user';
+
+// 액션 상수
+export const LOG_IN_REQUEST = 'LOG_IN_REQUEST' as const;
+export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS' as const;
+export const LOG_IN_FAILURE = 'LOG_IN_FAILURE' as const;
+
+export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST' as const;
+export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS' as const;
+export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE' as const;
+
+export const EMAIL_CHECK_REQUEST = 'EMAIL_CHECK_REQUEST' as const;
+export const EMAIL_CHECK_SUCCESS = 'EMAIL_CHECK_SUCCESS' as const;
+export const EMAIL_CHECK_FAILURE = 'EMAIL_CHECK_FAILURE' as const;
+
+export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST' as const;
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS' as const;
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE' as const;
+
+export const LOAD_PROFILE_REQUEST = 'LOAD_PROFILE_REQUEST' as const;
+export const LOAD_PROFILE_SUCCESS = 'LOAD_PROFILE_SUCCESS' as const;
+export const LOAD_PROFILE_FAILURE = 'LOAD_PROFILE_FAILURE' as const;
+
+export const CHANGE_PROFILE_REQUEST = 'EDIT_PROFILE_REQUEST' as const;
+export const CHANGE_PROFILE_SUCCESS = 'EDIT_PROFILE_SUCCESS' as const;
+export const CHANGE_PROFILE_FAILURE = 'EDIT_PROFILE_FAILURE' as const;
 
 // 액션 크리에이터
-export const loadMyInfoRequest = () => ({
-    type: LOAD_MY_INFO_REQUEST,
-});
-
-export const loadMyInfoSuccess = (user: User, token: string) => ({
-    type: LOAD_MY_INFO_SUCCESS,
-    user,
-    token,
-});
-
-export const loadMyInfoFailure = (error: string) => ({
-    type: LOAD_MY_INFO_FAILURE,
-    error,
-});
-
-export const loginRequest = (email: string, password: string) => ({
+export const loginRequest = (signinMethod: string, email?: string, password?: string) => ({
     type: LOG_IN_REQUEST,
     data: {
+        signinMethod,
         email,
         password,
-        signinMethod: 'password',
     },
 });
 
@@ -59,13 +42,6 @@ export const loginSuccess = () => ({
 export const loginFailure = (error: string) => ({
     type: LOG_IN_FAILURE,
     error,
-});
-
-export const oauthLoginRequest = (signinMethod: string) => ({
-    type: LOG_IN_REQUEST,
-    data: {
-        signinMethod,
-    },
 });
 
 export const logoutRequest = () => ({
@@ -109,53 +85,34 @@ export const signupFailure = (error: string) => ({
     error,
 });
 
-export const registerServiceRequest = (data: FormData, accessToken: string) => ({
-    type: REGISTER_SERVICE_REQUEST,
-    data,
-    accessToken,
+export const loadProfileRequest = () => ({
+    type: LOAD_PROFILE_REQUEST,
 });
 
-export const registerServiceSuccess = (service: ShortService) => ({
-    type: REGISTER_SERVICE_SUCCESS,
-    service,
+export const loadProfileSuccess = (token: string, me: Me) => ({
+    type: LOAD_PROFILE_SUCCESS,
+    token,
+    me,
 });
 
-export const registerServiceFailure = (error: string) => ({
-    type: REGISTER_SERVICE_FAILURE,
+export const loadProfileFailure = (error: string) => ({
+    type: LOAD_PROFILE_FAILURE,
     error,
 });
 
-export const loadOrdersRequest = (accessToken: string, userType: string, userId: string) => ({
-    type: LOAD_ORDERS_REQUEST,
-    accessToken,
-    userType,
-    userId,
-});
-
-export const loadOrdersSuccess = (orders: Order[], userType: string) => ({
-    type: LOAD_ORDERS_SUCCESS,
-    orders,
-    userType,
-});
-
-export const loadOrdersFailure = (error: string) => ({
-    type: LOAD_ORDERS_FAILURE,
-    error,
-});
-
-export const editProfileRequest = (userId: string, accessToken: string, data: FormData) => ({
-    type: EDIT_PROFILE_REQUEST,
+export const changeProfileRequest = (userId: string, accessToken: string, data: FormData) => ({
+    type: CHANGE_PROFILE_REQUEST,
     userId,
     accessToken,
     data,
 });
 
-export const editProfileSuccess = (user: User) => ({
-    type: EDIT_PROFILE_SUCCESS,
-    user,
+export const changeProfileSuccess = (me: Me) => ({
+    type: CHANGE_PROFILE_SUCCESS,
+    me,
 });
 
-export const editProfileFailure = (error: string) => ({
-    type: EDIT_PROFILE_FAILURE,
+export const changeProfileFailure = (error: string) => ({
+    type: CHANGE_PROFILE_FAILURE,
     error,
 });

@@ -6,9 +6,10 @@ import { CheckCircleTwoTone, ExclamationCircleOutlined } from '@ant-design/icons
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { ParsedUrlQuery } from 'querystring';
-import { checkoutRequest, getReservationInfoRequest } from '../../actions/service';
 import { RootState } from '../../reducers';
 import { ActionButton } from '../style';
+import { checkoutRequest } from '../../actions/payment';
+import { loadOrderInfoRequest } from '../../actions/order';
 
 type Props = {
     result: ParsedUrlQuery;
@@ -22,9 +23,10 @@ const PaymentResult = ({ result }: Props) => {
 
     const dispatch = useDispatch();
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const { getReservationInfo, checkoutStatus, checkoutError } = useSelector((state: RootState) => state.service);
+    const { orderInfo } = useSelector((state: RootState) => state.order);
+    const { checkoutStatus, checkoutError } = useSelector((state: RootState) => state.payment);
 
-    const order = getReservationInfo;
+    const order = orderInfo;
 
     const [checkoutErrorMsg, setCheckoutErrorMsg] = useState('');
     const [isSuccessed, setIsSuccessed] = useState(false);
@@ -36,7 +38,7 @@ const PaymentResult = ({ result }: Props) => {
 
     useEffect(() => {
         if (accessToken) {
-            dispatch(getReservationInfoRequest(result.orderId, accessToken));
+            dispatch(loadOrderInfoRequest(result.orderId, accessToken));
         }
     }, [result.orderId, accessToken, dispatch]);
 

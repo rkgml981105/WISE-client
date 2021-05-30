@@ -19,24 +19,25 @@ import {
     RegisterFormWrapper,
 } from '../style';
 import { RootState } from '../../reducers';
-import { addServiceRequest } from '../../actions/service';
+import { changeServiceRequest } from '../../actions/service';
 
 type availableDay = {
     label: string;
     value: string;
 };
 
-const RegisterForm = () => {
+const AssistantModify = () => {
     const dispatch = useDispatch();
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const { addServiceDone } = useSelector((state: RootState) => state.service);
+    const { myService, changeServiceDone } = useSelector((state: RootState) => state.service);
+
     // 가능 지역
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState(myService.location);
     const onChangeLocation = useCallback((value: string) => {
         setLocation(value);
     }, []);
     // 가능 요일
-    const [availableDays, setAvailableDays] = useState<Array<CheckboxValueType>>([]);
+    const [availableDays, setAvailableDays] = useState<Array<CheckboxValueType>>(myService.availableDays);
     const availableDaysOptions = useMemo(
         (): Array<availableDay> => [
             { label: '월 오전', value: 'Monday am' },
@@ -78,19 +79,19 @@ const RegisterForm = () => {
         [images],
     );
     // 한 줄 소개
-    const [greetings, onChangeGreetings] = useInput('');
+    const [greetings, onChangeGreetings] = useInput(myService.greetings);
 
     // 가격
-    const [wage, onChangeWage] = useInput('');
+    const [wage, onChangeWage] = useInput(myService.wage);
 
     // 서비스 소개
-    const [description, onChangeDescription] = useInput('');
+    const [description, onChangeDescription] = useInput(myService.description);
 
     // 계좌 번호
-    const [bankAccount, onChangeBankAccount] = useInput('');
+    const [bankAccount, onChangeBankAccount] = useInput(myService.bankAccount);
 
     // 기관 인증
-    const [isAuthorized, setIsAuthorized] = useState('');
+    const [isAuthorized, setIsAuthorized] = useState(String(myService.isAuthorized));
     const onChangeIsAuthorized = useCallback((e: RadioChangeEvent) => {
         setIsAuthorized(e.target.value);
     }, []);
@@ -114,7 +115,7 @@ const RegisterForm = () => {
     );
 
     // 교육 이수
-    const [isTrained, setIsTrained] = useState('');
+    const [isTrained, setIsTrained] = useState(String(myService.isTrained));
     const onChangeIsTrained = useCallback((e: RadioChangeEvent) => {
         setIsTrained(e.target.value);
     }, []);
@@ -138,16 +139,16 @@ const RegisterForm = () => {
     );
 
     // 운전 여부
-    const [isDriver, setIsDriver] = useState('');
+    const [isDriver, setIsDriver] = useState(String(myService.isDriver));
     const onChangeIsDriver = useCallback((e: RadioChangeEvent) => {
         setIsDriver(e.target.value);
     }, []);
 
     useEffect(() => {
-        if (addServiceDone) {
+        if (changeServiceDone) {
             Router.replace('/home');
         }
-    }, [addServiceDone]);
+    }, [changeServiceDone]);
 
     const onSubmit = useCallback(
         (e: FormEvent<HTMLFormElement>) => {
@@ -169,7 +170,7 @@ const RegisterForm = () => {
             trainingCert.map((v) => data.append('trainingCert', v));
             availableDays.map((v) => data.append('availableDays', v as string));
 
-            dispatch(addServiceRequest(data, accessToken));
+            dispatch(changeServiceRequest(myService._id, accessToken, data));
         },
         [
             location,
@@ -185,26 +186,39 @@ const RegisterForm = () => {
             trainingCert,
             isDriver,
             accessToken,
+            myService,
             dispatch,
         ],
     );
     return (
         <Wrapper>
+            <Title>어시스턴트 수정</Title>
             <RegisterFormWrapper onSubmit={onSubmit} encType="multipart/form-data">
                 <InputWrapper>
-                    <span>✅가능 지역</span>
-                    <Select onChange={onChangeLocation} showSearch placeholder="위치 입력" optionFilterProp="children">
-                        <Select.Option value="seoul">서울</Select.Option>
-                        <Select.Option value="gyeonggi">경기</Select.Option>
-                        <Select.Option value="incheon">인천</Select.Option>
+                    <span>가능 지역</span>
+                    <Select
+                        onChange={onChangeLocation}
+                        showSearch
+                        placeholder="위치 입력"
+                        optionFilterProp="children"
+                        defaultValue={location}
+                    >
+                        <Select.Option value="서울시 성동구">서울시 성동구</Select.Option>
+                        <Select.Option value="서울시 종로구">서울시 종로구</Select.Option>
+                        <Select.Option value="서울시 강서구">서울시 강서구</Select.Option>
+                        <Select.Option value="서울시 송파구">서울시 송파구</Select.Option>
                     </Select>
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅가능 요일</span>
-                    <Checkbox.Group options={availableDaysOptions} onChange={onChangeDays} />
+                    <span>가능 요일</span>
+                    <Checkbox.Group
+                        options={availableDaysOptions}
+                        onChange={onChangeDays}
+                        defaultValue={myService.availableDays}
+                    />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅프로필</span>
+                    <span>프로필</span>
                     <input type="file" accept="image/*" multiple hidden ref={imagesInput} onChange={onChangeImages} />
                     <Button icon={<UploadOutlined />} onClick={imagesUpload}>
                         Upload
@@ -221,26 +235,33 @@ const RegisterForm = () => {
                     ))}
                 </ProfileImagesWrapper>
                 <InputWrapper>
-                    <span>✅한줄 소개</span>
-                    <input onChange={onChangeGreetings} placeholder="본인을 한줄로 설명해 주세요" required />
+                    <span>한줄 소개</span>
+                    <input onChange={onChangeGreetings} value={greetings} placeholder="본인을 한줄로 설명해 주세요" />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅가격</span>
-                    <input type="number" onChange={onChangeWage} placeholder="시급" step={1000} required />
+                    <span>가격</span>
+                    <input
+                        className="shortInput"
+                        type="number"
+                        value={wage}
+                        onChange={onChangeWage}
+                        placeholder="시급"
+                        step={1000}
+                    />
                     원/시간
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅서비스 소개</span>
-                    <textarea onChange={onChangeDescription} placeholder="서비스설명" required />
+                    <span>서비스 소개</span>
+                    <textarea value={description} onChange={onChangeDescription} placeholder="서비스설명" />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅계좌 번호</span>
-                    <input onChange={onChangeBankAccount} placeholder="계좌번호" required />
+                    <span>계좌 번호</span>
+                    <input value={bankAccount} onChange={onChangeBankAccount} placeholder="계좌번호" />
                 </InputWrapper>
                 <hr />
                 <InputWrapper>
                     <span>기관 인증</span>
-                    <Radio.Group onChange={onChangeIsAuthorized}>
+                    <Radio.Group onChange={onChangeIsAuthorized} defaultValue={isAuthorized}>
                         <Radio value="true">완료</Radio>
                         <Radio value="false">미완료</Radio>
                     </Radio.Group>
@@ -264,7 +285,7 @@ const RegisterForm = () => {
                 </InputWrapper>
                 <InputWrapper>
                     <span>교육 이수</span>
-                    <Radio.Group onChange={onChangeIsTrained}>
+                    <Radio.Group onChange={onChangeIsTrained} defaultValue={isTrained}>
                         <Radio value="true">완료</Radio>
                         <Radio value="false">미완료</Radio>
                     </Radio.Group>
@@ -295,14 +316,14 @@ const RegisterForm = () => {
                 </InputWrapper>
                 <InputWrapper>
                     <span>운전 여부</span>
-                    <Radio.Group onChange={onChangeIsDriver}>
+                    <Radio.Group onChange={onChangeIsDriver} defaultValue={isDriver}>
                         <Radio value="true">가능</Radio>
                         <Radio value="false">불가능</Radio>
                     </Radio.Group>
                 </InputWrapper>
                 <SubmitBtnWrapper>
                     <SubmitBtn type="submit" className="submitbtn">
-                        어시스턴트 등록
+                        어시스턴트 수정
                     </SubmitBtn>
                 </SubmitBtnWrapper>
             </RegisterFormWrapper>
@@ -311,8 +332,16 @@ const RegisterForm = () => {
 };
 
 const Wrapper = styled.div`
-    max-width: 830px;
+    // border: 1px solid black;
+    max-width: 820px;
     position: relative;
 `;
 
-export default RegisterForm;
+const Title = styled.div`
+    // border: 1px solid black;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 2rem;
+`;
+
+export default AssistantModify;

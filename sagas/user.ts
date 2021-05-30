@@ -5,66 +5,33 @@ import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 import firebase from 'firebase/app';
 import { auth, googleAuthProvider, facebookAuthProvider } from '../firebase';
-
-import { User } from '../interfaces/data/user';
+import { LoginData, Me, SignupData } from '../interfaces/data/user';
 import {
-    EDIT_PROFILE_REQUEST,
-    EMAIL_CHECK_REQUEST,
-    LOAD_MY_INFO_REQUEST,
-    LOAD_ORDERS_REQUEST,
-    LOG_IN_REQUEST,
-    LOG_OUT_REQUEST,
-    REGISTER_SERVICE_REQUEST,
-    SIGN_UP_REQUEST,
-} from '../interfaces/act/user';
-import {
-    loadMyInfoSuccess,
-    loadMyInfoFailure,
+    loadProfileSuccess,
+    loadProfileFailure,
+    loginRequest,
     loginSuccess,
     loginFailure,
     logoutSuccess,
     logoutFailure,
+    emailCheckRequest,
     emailCheckSuccess,
     emailCheckFailure,
+    signupRequest,
     signupSuccess,
     signupFailure,
-    registerServiceSuccess,
-    registerServiceFailure,
-    loginRequest,
-    emailCheckRequest,
-    registerServiceRequest,
-    signupRequest,
-    loadOrdersSuccess,
-    loadOrdersFailure,
-    loadOrdersRequest,
-    editProfileRequest,
-    editProfileSuccess,
-    editProfileFailure,
+    changeProfileRequest,
+    changeProfileSuccess,
+    changeProfileFailure,
+    LOG_IN_REQUEST,
+    LOG_OUT_REQUEST,
+    EMAIL_CHECK_REQUEST,
+    SIGN_UP_REQUEST,
+    LOAD_PROFILE_REQUEST,
+    CHANGE_PROFILE_REQUEST,
 } from '../actions/user';
-import { Order, ShortService } from '../interfaces/data/service';
 
 axios.defaults.withCredentials = true;
-
-function loadMyInfoAPI(userId: string) {
-    return axios.get(`/api/v1/users/${userId}`);
-}
-
-function* loadMyInfo() {
-    try {
-        const userId = localStorage.getItem('userId') as string;
-        const accessToken = localStorage.getItem('accessToken') as string;
-        const result: AxiosResponse<{ user: User }> = yield call(loadMyInfoAPI, userId);
-        yield put(loadMyInfoSuccess(result.data.user, accessToken));
-    } catch (err) {
-        yield put(loadMyInfoFailure(err.message));
-    }
-}
-
-type LoginData = {
-    email?: string;
-    password?: string;
-    signinMethod: string;
-};
 
 async function loginToken({ email, password, signinMethod }: LoginData) {
     let result = null;
@@ -95,7 +62,7 @@ function logInAPI(accessToken: string, { signinMethod }: LoginData) {
 function* logIn(action: ReturnType<typeof loginRequest>) {
     try {
         const accessToken: string = yield call(loginToken, action.data);
-        const result: AxiosResponse<{ user: User }> = yield call(logInAPI, accessToken, action.data);
+        const result: AxiosResponse<{ user: Me }> = yield call(logInAPI, accessToken, action.data);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('userId', result.data.user._id);
         yield put(loginSuccess());
@@ -130,22 +97,6 @@ function* logOut() {
     }
 }
 
-type SignupData = {
-    email: string;
-    password: string;
-    name?: string;
-    mobile?: string;
-    signinMethod?: string;
-};
-
-async function signupToken({ email, password }: SignupData) {
-    await auth.signInWithEmailLink(email, location.href);
-    const user = auth.currentUser as firebase.User;
-    await user.updatePassword(password);
-    const accessToken = await user.getIdToken();
-    return accessToken;
-}
-
 async function emailCheckAPI(email: string) {
     await axios.post('/api/v1/validation/email', {
         email,
@@ -168,6 +119,14 @@ function* emailCheck(action: ReturnType<typeof emailCheckRequest>) {
     }
 }
 
+async function signupToken({ email, password }: SignupData) {
+    await auth.signInWithEmailLink(email, location.href);
+    const user = auth.currentUser as firebase.User;
+    await user.updatePassword(password);
+    const accessToken = await user.getIdToken();
+    return accessToken;
+}
+
 function signUpAPI(accessToken: string, { email, name, mobile, signinMethod }: SignupData) {
     return axios.post(
         '/api/v1/signup',
@@ -183,7 +142,7 @@ function signUpAPI(accessToken: string, { email, name, mobile, signinMethod }: S
 function* signUp(action: ReturnType<typeof signupRequest>) {
     try {
         const accessToken: string = yield call(signupToken, action.data);
-        const result: AxiosResponse<{ user: User }> = yield call(signUpAPI, accessToken, action.data);
+        const result: AxiosResponse<{ user: Me }> = yield call(signUpAPI, accessToken, action.data);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('userId', result.data.user._id);
         localStorage.removeItem('emailForSignup');
@@ -193,59 +152,22 @@ function* signUp(action: ReturnType<typeof signupRequest>) {
     }
 }
 
-function registerServiceAPI(accessToken: string, data: FormData) {
-    return axios({
-        method: 'POST',
-        url: 'http://localhost:5000/api/v1/services',
-        headers: {
-            accessToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
-        },
-        data,
-    });
+function loadProfileAPI(userId: string) {
+    return axios.get(`/api/v1/users/${userId}`);
 }
 
-function* registerService(action: ReturnType<typeof registerServiceRequest>) {
+function* loadProfile() {
     try {
-        const result: AxiosResponse<{ service: ShortService }> = yield call(
-            registerServiceAPI,
-            action.accessToken,
-            action.data,
-        );
-        console.log(result);
-        yield put(registerServiceSuccess(result.data.service));
+        const userId = localStorage.getItem('userId') as string;
+        const accessToken = localStorage.getItem('accessToken') as string;
+        const result: AxiosResponse<{ user: Me }> = yield call(loadProfileAPI, userId);
+        yield put(loadProfileSuccess(accessToken, result.data.user));
     } catch (err) {
-        yield put(registerServiceFailure(err.message));
+        yield put(loadProfileFailure(err.message));
     }
 }
 
-function loadOrdersAPI(accessToken: string, userType: string, userId: string) {
-    console.log('accessToken: ', accessToken);
-    return axios.get(`/api/v1/orders?userId=${userId}&type=${userType}`, {
-        headers: {
-            accessToken,
-        },
-    });
-}
-
-function* loadOrders(action: ReturnType<typeof loadOrdersRequest>) {
-    try {
-        const result: AxiosResponse<{ orders: Order[] }> = yield call(
-            loadOrdersAPI,
-            action.accessToken,
-            action.userType,
-            action.userId,
-        );
-        console.log(result);
-        yield put(loadOrdersSuccess(result.data.orders, action.userType));
-    } catch (err) {
-        console.log(err.message);
-        yield put(loadOrdersFailure(err.message));
-    }
-}
-
-function editProfileAPI(userId: string, accessToken: string, data: FormData) {
+function changeProfileAPI(userId: string, accessToken: string, data: FormData) {
     console.log('accessToken: ', accessToken);
     return axios.patch(`/api/v1/users/${userId}`, data, {
         headers: {
@@ -254,24 +176,20 @@ function editProfileAPI(userId: string, accessToken: string, data: FormData) {
     });
 }
 
-function* editProfile(action: ReturnType<typeof editProfileRequest>) {
+function* changeProfile(action: ReturnType<typeof changeProfileRequest>) {
     try {
-        const result: AxiosResponse<{ user: User }> = yield call(
-            editProfileAPI,
+        const result: AxiosResponse<{ user: Me }> = yield call(
+            changeProfileAPI,
             action.userId,
             action.accessToken,
             action.data,
         );
         console.log('result :', result.data);
-        yield put(editProfileSuccess(result.data.user));
+        yield put(changeProfileSuccess(result.data.user));
     } catch (err) {
         console.log(err.message);
-        yield put(editProfileFailure(err.message));
+        yield put(changeProfileFailure(err.message));
     }
-}
-
-function* watchLoadMyInfo() {
-    yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
 function* watchLogIn() {
@@ -290,27 +208,21 @@ function* watchSignUp() {
     yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
 
-function* watchRegisterService() {
-    yield takeLatest(REGISTER_SERVICE_REQUEST, registerService);
+function* watchLoadProfile() {
+    yield takeLatest(LOAD_PROFILE_REQUEST, loadProfile);
 }
 
-function* watchLoadOrders() {
-    yield takeLatest(LOAD_ORDERS_REQUEST, loadOrders);
-}
-
-function* watchEditProfile() {
-    yield takeLatest(EDIT_PROFILE_REQUEST, editProfile);
+function* watchChangeProfile() {
+    yield takeLatest(CHANGE_PROFILE_REQUEST, changeProfile);
 }
 
 export default function* userSaga() {
     yield all([
-        fork(watchLoadMyInfo),
-        fork(watchEmailCheck),
         fork(watchLogIn),
         fork(watchLogOut),
+        fork(watchEmailCheck),
         fork(watchSignUp),
-        fork(watchRegisterService),
-        fork(watchLoadOrders),
-        fork(watchEditProfile),
+        fork(watchLoadProfile),
+        fork(watchChangeProfile),
     ]);
 }

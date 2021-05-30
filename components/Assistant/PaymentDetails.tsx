@@ -1,6 +1,6 @@
 import { Table } from 'antd';
 import styled from 'styled-components';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 
 // {
 //     _id: '1',
@@ -36,7 +36,7 @@ type PaymentDetailsProps = {
 };
 
 const PaymentDetails = ({ orders }: PaymentDetailsProps) => {
-    const dataSource = orders.map((ele, idx) => ({
+    const dataSource = orders?.map((ele, idx) => ({
         key: idx,
         orderName: `${ele.assistant.name}의 동행 서비스`,
         date: ele.date,

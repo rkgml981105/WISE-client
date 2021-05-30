@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { CancelButton } from '../style';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 
 type Props = {
     reservationInfo: Order;

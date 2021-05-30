@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CancelButton, ActionButton } from './style';
-import { RESERVATION_ACCEPT_REQUEST, RESERVATION_REJECT_REQUEST } from '../interfaces/act/service';
 import AcceptSuccessModal from './AcceptSuccessModal';
 import { RootState } from '../reducers';
+import { acceptOrderRequest, rejectOrderRequest } from '../actions/order';
 
 type Props = {
-    orderId: string | string[];
+    orderId: string;
 };
 
 const AcceptOrder = ({ orderId }: Props) => {
@@ -41,12 +41,7 @@ const AcceptOrder = ({ orderId }: Props) => {
     const handleClickAccept = useCallback(
         (e) => {
             e.preventDefault();
-            dispatch({
-                type: RESERVATION_ACCEPT_REQUEST,
-                orderId,
-                accessToken,
-                state: 'accept',
-            });
+            dispatch(acceptOrderRequest(orderId, accessToken, 'accept'));
         },
         [accessToken, orderId, dispatch],
     );
@@ -55,11 +50,7 @@ const AcceptOrder = ({ orderId }: Props) => {
     const handleClickReject = useCallback(
         (e) => {
             e.preventDefault();
-            dispatch({
-                type: RESERVATION_REJECT_REQUEST,
-                orderId,
-                accessToken,
-            });
+            dispatch(rejectOrderRequest(orderId, accessToken));
         },
         [accessToken, orderId, dispatch],
     );

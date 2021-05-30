@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 import AssistantCard from './AssistantCard';
 
 // {
@@ -58,18 +58,18 @@ const AssistantList = ({ title, orders }: AssistantListProps) => {
     };
     return (
         <Wrapper>
-            <Title>{title} 어시스턴트 목록</Title>
-            <PrevBtn onClick={slidePrev}>&lang;</PrevBtn>
+            <Title>{title}</Title>
+            {orders?.length > 3 && mainIndex > 0 && <PrevBtn onClick={slidePrev}>&lang;</PrevBtn>}
             <Container>
                 {orders && (
                     <Slider ref={slider}>
-                        {orders.map((ele: Order) => (
+                        {orders?.map((ele: Order) => (
                             <AssistantCard key={ele._id} order={ele} />
                         ))}
                     </Slider>
                 )}
             </Container>
-            <NextBtn onClick={slideNext}>&rang;</NextBtn>
+            {orders?.length > 3 && mainIndex < orders.length - 3 && <NextBtn onClick={slideNext}>&rang;</NextBtn>}
         </Wrapper>
     );
 };

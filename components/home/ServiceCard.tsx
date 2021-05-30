@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
 import styled from 'styled-components';
@@ -6,7 +7,7 @@ import { ShortService } from '../../interfaces/data/service';
 
 type ServiceCard = {
     service: ShortService;
-    searchQuery: { date: string; location: string; page: number; time: string };
+    searchQuery?: { date: string; location: string; page: number; time: string };
 };
 
 const ServiceCard = ({ service, searchQuery }: ServiceCard) => (

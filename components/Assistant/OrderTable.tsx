@@ -1,6 +1,6 @@
 import { Table } from 'antd';
 import styled from 'styled-components';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 
 // {
 //     _id: '1',

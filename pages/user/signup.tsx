@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Router from 'next/router';
-import SignupForm from '../../components/auth/SignupForm';
 import Layout from '../../layout/Layout';
-import { AuthGlobal, CoverImg, Modal, ModalTitle } from '../../components/auth/styles';
 import { RootState } from '../../reducers';
-import { loadMyInfoRequest } from '../../actions/user';
+
+import { AuthGlobal, CoverImg, Modal, ModalTitle } from '../../components/auth/styles';
+import SignupForm from '../../components/auth/SignupForm';
+import { loadProfileRequest } from '../../actions/user';
 
 const Signup = () => {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const Signup = () => {
 
     useEffect(() => {
         if (signUpDone) {
-            dispatch(loadMyInfoRequest());
+            dispatch(loadProfileRequest());
         }
     }, [signUpDone, dispatch]);
 
