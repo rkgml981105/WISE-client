@@ -21,7 +21,7 @@ const Signin = () => {
 
     useEffect(() => {
         if (me) {
-            if (me.isAssistant) {
+            if (me.service) {
                 Router.replace('/home');
             } else {
                 Router.replace('/welcome');

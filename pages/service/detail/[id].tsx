@@ -1,9 +1,11 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import { GetServerSideProps } from 'next';
+import { useCallback, useEffect } from 'react';
+import axios, { AxiosResponse } from 'axios';
 import Navigation from '../../../components/ServiceDetail/Navigation';
 import Summary from '../../../components/ServiceDetail/Summary';
 import Description from '../../../components/ServiceDetail/Description';
@@ -16,7 +18,7 @@ import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
 import Swiper from '../../../components/ServiceDetail/Swiper';
-import { LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
+import { loadServiceSchedule, LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
 
 const Global = createGlobalStyle`
     footer {
@@ -34,6 +36,7 @@ const Global = createGlobalStyle`
 
 const ServiceDetail = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
     // const { id } = router.query;
     // console.log(id);
     // TODO: search result가 한번에 안받아와지고 새로고침해야지만 받아와지는 문제
@@ -41,6 +44,14 @@ const ServiceDetail = () => {
     console.log(searchResult);
     // TODO: review import
     const { service } = useSelector((state: RootState) => state.service);
+
+    useEffect(() => {
+        if (typeof router.query.id === 'string') {
+            axios.get(`http://localhost:5000/api/v1/services/schedule?serviceId=${router.query.id}`).then((result) => {
+                dispatch(loadServiceSchedule(result.data));
+            });
+        }
+    }, [dispatch, router]);
 
     return (
         <>

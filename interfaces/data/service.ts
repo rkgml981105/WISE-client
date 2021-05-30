@@ -30,6 +30,11 @@ export interface Query {
     page: number;
 }
 
+export interface Schedule {
+    availableDays: string[];
+    orders: string[];
+}
+
 export type ServiceState = {
     myService: Service | null;
     service: Service | null;
@@ -39,6 +44,7 @@ export type ServiceState = {
     searchServices: ShortService[] | [];
     searchServicesCount: number;
     searchQuery: Query | null;
+    serviceSchedule: Schedule | null;
     addServiceLoading: boolean;
     addServiceDone: boolean;
     addServiceError: null | string;
