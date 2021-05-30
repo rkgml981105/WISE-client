@@ -18,7 +18,7 @@ import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
 import Swiper from '../../../components/ServiceDetail/Swiper';
-import { loadServiceSchedule, LOAD_SERVICE_INFO_REQUEST, LOAD_SERVICE_SCHEDULE } from '../../../actions/service';
+import { loadServiceSchedule, LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
 
 const Global = createGlobalStyle`
     footer {
