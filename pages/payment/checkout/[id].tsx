@@ -8,12 +8,13 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import AssistantInfo from '../../../components/AssistantInfo';
 import { RootState } from '../../../reducers/index';
 
-import { getReservationInfoRequest, getServiceInfoRequest } from '../../../actions/service';
 import Loading from '../../../components/Loading';
 import OrderItem from '../../../components/payment/OrderItem';
 import ReservationInfo from '../../../components/reservation/ReservationInfo';
 import { WarningBox, ActionButton } from '../../../components/style';
 import Layout from '../../../layout/Layout';
+import { loadOrderInfoRequest } from '../../../actions/order';
+import { loadServiceInfoRequest } from '../../../actions/service';
 
 const Global = createGlobalStyle`
     footer {
@@ -28,23 +29,24 @@ const Payment = () => {
     console.log(id);
 
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const { service, getReservationInfo } = useSelector((state: RootState) => state.service);
-    console.log(getReservationInfo);
+    const { service } = useSelector((state: RootState) => state.service);
+    const { orderInfo } = useSelector((state: RootState) => state.order);
+    console.log(orderInfo);
     useEffect(() => {
         if (accessToken) {
-            dispatch(getReservationInfoRequest(id, accessToken));
+            dispatch(loadOrderInfoRequest(id, accessToken));
         }
     }, [id, accessToken, dispatch]);
 
     useEffect(() => {
-        if (getReservationInfo) {
-            dispatch(getServiceInfoRequest(getReservationInfo.service));
+        if (orderInfo) {
+            dispatch(loadServiceInfoRequest(orderInfo.service));
         }
-    }, [getReservationInfo, dispatch]);
+    }, [orderInfo, dispatch]);
 
     return (
         <>
-            {getReservationInfo?.state === 'complete' ? (
+            {orderInfo?.state === 'complete' ? (
                 <Layout title="Checkout">
                     <>
                         <Global />
@@ -74,10 +76,10 @@ const Payment = () => {
                                             </Link>
                                             <h2>결제하기</h2>
                                         </Title>
-                                        <ReservationInfo reservationInfo={getReservationInfo} />
-                                        <OrderItem reservationInfo={getReservationInfo} />
+                                        <ReservationInfo reservationInfo={orderInfo} />
+                                        <OrderItem reservationInfo={orderInfo} />
                                     </Container>
-                                    <AssistantInfo service={service} hours={getReservationInfo.hours} />
+                                    <AssistantInfo service={service} hours={orderInfo.hours} />
                                 </Wrapper>
                             </>
                         </Layout>

@@ -1,23 +1,30 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
+import Router from 'next/router';
+import { useCallback } from 'react';
 import styled from 'styled-components';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 
 type AssistantCard = {
     order: Order;
 };
 
-const AssistantCard = ({ order }: AssistantCard) => (
-    <Container>
-        <ServiceImg src={process.env.NEXT_PUBLIC_imageURL + order.service.images[0]} alt="샘플이미지" />
-        <div className="userName">{order.assistant.name}</div>
-        <div className="location">{order.service.location}</div>
-        {order.state === 'apply' && <Btn>수락대기중</Btn>}
-        {order.state === 'accept' && <Btn>결제하기</Btn>}
-        {order.state === 'complete' &&
-            (order.isReviewed ? <Btn disabled>후기작성완료</Btn> : <Btn>후기남기러가기</Btn>)}
-    </Container>
-);
+const AssistantCard = ({ order }: AssistantCard) => {
+    const onClickPayment = useCallback(() => {
+        Router.replace(`/payment/checkout/${order._id}`);
+    }, [order]);
+    return (
+        <Container>
+            <ServiceImg src={process.env.NEXT_PUBLIC_imageURL + order.service.images[0]} alt="샘플이미지" />
+            <div className="userName">{order.assistant.name}</div>
+            <div className="location">{order.service.location}</div>
+            {order.state === 'apply' && <Btn disabled>수락 대기중</Btn>}
+            {order.state === 'accept' && <Btn onClick={onClickPayment}>결제하기</Btn>}
+            {order.state === 'complete' &&
+                (order.isReviewed ? <Btn disabled>후기 작성 완료</Btn> : <Btn>후기 남기러가기</Btn>)}
+        </Container>
+    );
+};
 
 const Btn = styled.button`
     border: none;

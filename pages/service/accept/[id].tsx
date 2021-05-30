@@ -8,10 +8,11 @@ import React, { useEffect } from 'react';
 import AcceptOrder from '../../../components/AcceptOrder';
 import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
-import { getReservationInfoRequest } from '../../../actions/service';
+
 import Loading from '../../../components/Loading';
 import { ActionButton, WarningBox } from '../../../components/style';
 import ReservationInfo from '../../../components/reservation/ReservationInfo';
+import { loadOrderInfoRequest } from '../../../actions/order';
 
 const Global = createGlobalStyle`
     footer {
@@ -27,23 +28,23 @@ const ReservationAccept = () => {
     console.log(id);
 
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const { getReservationInfo, getReservationInfoError } = useSelector((state: RootState) => state.service);
-    console.log(getReservationInfo);
+    const { orderInfo, loadOrderInfoError } = useSelector((state: RootState) => state.order);
+    console.log(orderInfo);
 
     useEffect(() => {
         if (accessToken) {
-            dispatch(getReservationInfoRequest(id, accessToken));
+            dispatch(loadOrderInfoRequest(id, accessToken));
         }
     }, [id, accessToken, dispatch]);
 
     return (
         <>
-            {getReservationInfo ? (
+            {orderInfo ? (
                 <Layout title="Reservation accept">
                     <>
                         <Global />
                         <Wrapper>
-                            <ReservationInfo reservationInfo={getReservationInfo} />
+                            <ReservationInfo reservationInfo={orderInfo} />
                             <Divide />
                             <AcceptOrder orderId={id} />
                         </Wrapper>
@@ -51,7 +52,7 @@ const ReservationAccept = () => {
                 </Layout>
             ) : (
                 <>
-                    {getReservationInfoError ? (
+                    {loadOrderInfoError ? (
                         <Layout title="Reservation accept">
                             <>
                                 <Global />

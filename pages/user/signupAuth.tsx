@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import Layout from '../../layout/Layout';
 import SignupAuthForm from '../../components/auth/SignupAuthForm';
-import { AuthGlobal, CoverImg, Modal, ModalTitle, ModalFooter } from '../../components/auth/styles';
+import { AuthGlobal, CoverImg, Modal, ModalFooter, ModalTitle } from '../../components/auth/styles';
+import Layout from '../../layout/Layout';
 import { RootState } from '../../reducers';
 
 const SignupAuth = () => {

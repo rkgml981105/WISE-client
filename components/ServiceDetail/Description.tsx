@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 // import PropTypes from 'prop-types';
-import { LongService } from '../../interfaces/data/service';
+import { Service } from '../../interfaces/data/service';
 
 type ServiceProps = {
-    service: LongService;
+    service: Service;
 };
 
 const Description = ({ service }: ServiceProps) => (

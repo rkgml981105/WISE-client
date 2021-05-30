@@ -12,7 +12,7 @@ import NotificationModal from '../components/NotificationModal';
 
 const Header = () => {
     const dispatch = useDispatch();
-    const { me, islogin, logOutDone } = useSelector((state: RootState) => state.user);
+    const { me, islogin, logoutDone } = useSelector((state: RootState) => state.user);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -24,11 +24,6 @@ const Header = () => {
     //     setShowModal(false);
     //     console.log('clicked!');
     // }, []);
-    useEffect(() => {
-        if (logOutDone) {
-            Router.replace('/home');
-        }
-    }, [logOutDone]);
 
     const Logout = useCallback(() => {
         dispatch(logoutRequest());
@@ -46,10 +41,10 @@ const Header = () => {
                         <Logo src="/images/WISE.png" alt="WISE logo" />
                     </Link>
                     <UserTap>
-                        <div style={{ width: '8rem' }}>
+                        <div>
                             {islogin ? (
                                 <>
-                                    {me?.isAssistant ? (
+                                    {me?.service ? (
                                         <Link href="/assistant/center">
                                             <AssistantBtn>어시스턴트 센터</AssistantBtn>
                                         </Link>
@@ -62,27 +57,26 @@ const Header = () => {
                             ) : null}
                         </div>
                         <div onClick={onClickModal}>
-                            {showModal ? (
-                                <BellOutlined
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        lineHeight: '2rem',
-                                        color: '#68d480',
-                                        cursor: 'pointer',
-                                    }}
-                                />
-                            ) : (
-                                <BellOutlined style={{ fontSize: '1.5rem', lineHeight: '2rem', cursor: 'pointer' }} />
-                            )}
+                            {me &&
+                                (showModal ? (
+                                    <BellOutlined
+                                        style={{
+                                            color: '#68d480',
+                                        }}
+                                    />
+                                ) : (
+                                    <BellOutlined />
+                                ))}
                         </div>
                         {showModal && <NotificationModal />}
                         <Link href="/user/mypage">
                             <a>
-                                {me?.image ? (
-                                    <Avatar src={process.env.NEXT_PUBLIC_imageURL + me.image} alt="avatar" />
-                                ) : (
-                                    <Avatar src="/images/avatar_default.png" alt="avatar" />
-                                )}
+                                {me &&
+                                    (me.image ? (
+                                        <Avatar src={process.env.NEXT_PUBLIC_imageURL + me.image} alt="avatar" />
+                                    ) : (
+                                        <Avatar src="/images/avatar_default.png" alt="avatar" />
+                                    ))}
                                 {me?.name}
                             </a>
                         </Link>
@@ -103,6 +97,7 @@ const Avatar = styled.img`
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #d2d2d2;
+    margin-right: 5px;
 `;
 
 const AssistantBtn = styled.div`
@@ -139,10 +134,15 @@ const Logo = styled.img`
 
 const UserTap = styled.div`
     // border: 1px solid black;
-    width: 300px;
+    width: 320px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    svg {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        cursor: pointer;
+    }
 `;
 
 const LoginBtn = styled.div`

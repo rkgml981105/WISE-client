@@ -1,19 +1,30 @@
-import { Order, ShortService } from './service';
+export type LoginData = {
+    email?: string;
+    password?: string;
+    signinMethod: string;
+};
 
-export interface User {
+export type SignupData = {
+    email: string;
+    password: string;
+    name?: string;
+    mobile?: string;
+    signinMethod?: string;
+};
+
+export interface Me {
     _id: string;
     email: string;
     name: string;
-    signinMethod: string;
     mobile: string;
     image: string;
-    isAssistant: boolean;
+    service: string;
 }
 
 export type UserState = {
-    loadMyInfoLoading: boolean; // 유저 정보 가져오기 시도중
-    loadMyInfoDone: boolean;
-    loadMyInfoError: null | string;
+    me: null | Me;
+    islogin: boolean;
+    accessToken: null | string;
     logInLoading: boolean; // 로그인
     logInDone: boolean;
     logInError: null | string;
@@ -26,23 +37,10 @@ export type UserState = {
     signUpLoading: boolean; // 회원가입
     signUpDone: boolean;
     signUpError: null | string;
-    registerServiceLoading: boolean; // 어시스턴트 등록
-    registerServiceDone: boolean;
-    registerServiceError: null | string;
-    loadOrdersLoading: boolean;
-    loadOrdersDone: boolean;
-    loadOrdersError: null | string;
-    editProfileLoading: boolean;
-    editProfileDone: boolean;
-    editProfileError: null | string;
-    accessToken: null | string;
-    me: null | User;
-    registerService: null | ShortService;
-    islogin: boolean;
-    applyOrdersC: null | Order[];
-    acceptOrdersC: null | Order[];
-    completeOrdersC: null | Order[];
-    applyOrdersA: null | Order[];
-    acceptOrdersA: null | Order[];
-    completeOrdersA: null | Order[];
+    loadProfileLoading: boolean; // 유저 정보 가져오기 시도중
+    loadProfileDone: boolean;
+    loadProfileError: null | string;
+    changeProfileLoading: boolean;
+    changeProfileDone: boolean;
+    changeProfileError: null | string;
 };

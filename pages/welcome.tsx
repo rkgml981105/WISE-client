@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import React from 'react';
 import Loading from '../components/Loading';
-import { AuthGlobal, CoverImg } from '../components/auth/styles';
 import { RootState } from '../reducers';
 import Layout from '../layout/Layout';
+import { AuthGlobal, CoverImg } from '../components/auth/styles';
 
 const Welcome = () => {
     const { me, islogin } = useSelector((state: RootState) => state.user);

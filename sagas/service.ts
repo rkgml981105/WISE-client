@@ -2,81 +2,131 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios, { AxiosResponse } from 'axios';
 import { all, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
-import * as data from '../interfaces/data/service';
-
 import {
-    GET_SERVICE_INFO_REQUEST,
-    LOAD_FIRST_REVIEWS_REQUEST,
-    LOAD_MORE_REVIEWS_REQUEST,
-    CREATE_RESERVATION_REQUEST,
-    GET_RESERVATION_INFO_REQUEST,
-    RESERVATION_ACCEPT_REQUEST,
-    RESERVATION_REJECT_REQUEST,
-    GET_ALL_RESERVATIONS_REQUEST,
-    CHECK_OUT_REQUEST,
-    LOAD_POPULAR_SERVICE_REQUEST,
-    LOAD_SEARCH_SERVICE_REQUEST,
-    LOAD_TOTAL_SERVICE_REQUEST,
-} from '../interfaces/act/service';
-import {
-    loadPopularServicesSuccess,
+    addServiceFailure,
+    addServiceRequest,
+    addServiceSuccess,
+    ADD_SERVICE_REQUEST,
+    changeServiceFailure,
+    changeServiceRequest,
+    changeServiceSuccess,
+    CHANGE_SERVICE_REQUEST,
     loadPopularServicesFailure,
-    loadTotalServicesSuccess,
-    loadTotalServicesFailure,
-    loadSearchServicesSuccess,
+    loadPopularServicesSuccess,
     loadSearchServicesFailure,
-    checkoutFailure,
-    checkoutSuccess,
-    createReservationFailure,
-    createReservationSuccess,
-    getAllReservationsFailure,
-    getAllReservationsSuccess,
-    getReservationInfoFailure,
-    getReservationInfoSuccess,
-    getServiceInfoFailure,
-    getServiceInfoSuccess,
-    loadFirstReviewFailure,
-    loadFirstReviewSuccess,
-    loadMoreReviewsFailure,
-    loadMoreReviewsSuccess,
-    reservationAcceptFailure,
-    reservationAcceptSuccess,
-    reservationRejectFailure,
-    reservationRejectSuccess,
-    loadMoreReviewsRequest,
-    checkoutRequest,
-    createReservationRequest,
-    getAllReservationsRequest,
-    getReservationInfoRequest,
-    getServiceInfoRequest,
-    loadFirstReviewRequest,
-    reservationAcceptRequest,
-    reservationRejectRequest,
-    loadTotalServicesRequest,
     loadSearchServicesRequest,
+    loadSearchServicesSuccess,
+    loadServiceFailure,
+    loadServiceInfoFailure,
+    loadServiceInfoRequest,
+    loadServiceInfoSuccess,
+    loadServiceRequest,
+    loadServiceSuccess,
+    loadTotalServicesFailure,
+    loadTotalServicesRequest,
+    loadTotalServicesSuccess,
+    LOAD_POPULAR_SERVICES_REQUEST,
+    LOAD_SEARCH_SERVICES_REQUEST,
+    LOAD_SERVICE_INFO_REQUEST,
+    LOAD_SERVICE_REQUEST,
+    LOAD_TOTAL_SERVICES_REQUEST,
+    removeServiceFailure,
+    removeServiceRequest,
+    removeServiceSuccess,
+    REMOVE_SERVICE_REQUEST,
 } from '../actions/service';
+import { Query, Service } from '../interfaces/data/service';
 
-function loadPopularServiceAPI() {
+function addServiceAPI(accessToken: string, data: FormData) {
+    return axios.post('http://localhost:5000/api/v1/services', data, {
+        headers: {
+            accessToken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
+        },
+    });
+}
+
+function* addService(action: ReturnType<typeof addServiceRequest>) {
+    try {
+        const result: AxiosResponse<{ service: Service }> = yield call(addServiceAPI, action.accessToken, action.data);
+        yield put(addServiceSuccess(result.data.service));
+    } catch (err) {
+        yield put(addServiceFailure(err.message));
+    }
+}
+
+function loadServiceAPI(serviceId: string) {
+    return axios.get(`api/v1/services/${serviceId}`);
+}
+
+function* loadService(action: ReturnType<typeof loadServiceRequest>) {
+    try {
+        const result: AxiosResponse<{ service: Service }> = yield call(loadServiceAPI, action.serviceId);
+        yield put(loadServiceSuccess(result.data.service));
+    } catch (err) {
+        yield put(loadServiceFailure(err.message));
+    }
+}
+
+function changeServiceAPI(serviceId: string, accessToken: string, data: FormData) {
+    return axios.patch(`api/v1/services/${serviceId}`, data, {
+        headers: {
+            accessToken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
+        },
+    });
+}
+
+function* changeService(action: ReturnType<typeof changeServiceRequest>) {
+    try {
+        const result: AxiosResponse<{ service: Service }> = yield call(
+            changeServiceAPI,
+            action.serviceId,
+            action.accessToken,
+            action.data,
+        );
+        yield put(changeServiceSuccess(result.data.service));
+    } catch (err) {
+        yield put(changeServiceFailure(err.message));
+    }
+}
+
+function removeServiceAPI(serviceId: string) {
+    return axios.delete(`api/v1/services/${serviceId}`);
+}
+
+function* removeService(action: ReturnType<typeof removeServiceRequest>) {
+    try {
+        yield call(removeServiceAPI, action.serviceId);
+        yield put(removeServiceSuccess());
+    } catch (err) {
+        yield put(removeServiceFailure(err.message));
+    }
+}
+
+function loadPopularServicesAPI() {
     return axios.get('/api/v1/services/popularity');
 }
 
-function* loadPopularService() {
+function* loadPopularServices() {
     try {
-        const result: AxiosResponse<{ popularServices: data.ShortService[] }> = yield call(loadPopularServiceAPI);
+        const result: AxiosResponse<{ popularServices: Service[] }> = yield call(loadPopularServicesAPI);
         yield put(loadPopularServicesSuccess(result.data.popularServices));
     } catch (err) {
         yield put(loadPopularServicesFailure(err.message));
     }
 }
 
-function loadTotalServiceAPI(page: number) {
+function loadTotalServicesAPI(page: number) {
     return axios.get(`/api/v1/services/all?page=${page}`);
 }
 
-function* loadTotalService(action: ReturnType<typeof loadTotalServicesRequest>) {
+function* loadTotalServices(action: ReturnType<typeof loadTotalServicesRequest>) {
     try {
-        const result: AxiosResponse<{ services: data.ShortService[]; totalServices: number }> = yield call(
-            loadTotalServiceAPI,
+        const result: AxiosResponse<{ services: Service[]; totalServices: number }> = yield call(
+            loadTotalServicesAPI,
             action.page,
         );
         yield put(loadTotalServicesSuccess(result.data.services, result.data.totalServices - 8));
@@ -85,15 +135,15 @@ function* loadTotalService(action: ReturnType<typeof loadTotalServicesRequest>) 
     }
 }
 
-function loadSearchServiceAPI(query: data.Query) {
+function loadSearchServicesAPI(query: Query) {
     const { location, date, time, page } = query;
     return axios.get(`/api/v1/services/?location=${location}&date=${date}&time=${time}&page=${page}`);
 }
 
-function* loadSearchService(action: ReturnType<typeof loadSearchServicesRequest>) {
+function* loadSearchServices(action: ReturnType<typeof loadSearchServicesRequest>) {
     try {
-        const result: AxiosResponse<{ services: data.ShortService[]; totalServices: number }> = yield call(
-            loadSearchServiceAPI,
+        const result: AxiosResponse<{ services: Service[]; totalServices: number }> = yield call(
+            loadSearchServicesAPI,
             action.query,
         );
         yield put(loadSearchServicesSuccess(result.data.services, result.data.totalServices, action.query));
@@ -102,258 +152,60 @@ function* loadSearchService(action: ReturnType<typeof loadSearchServicesRequest>
     }
 }
 
-function getSingleServiceAPI(serviceId: string) {
+function loadServiceInfoAPI(serviceId: string) {
     return axios.get(`api/v1/services/${serviceId}`);
 }
 
-function* getSingleService(action: ReturnType<typeof getServiceInfoRequest>) {
+function* loadServiceInfo(action: ReturnType<typeof loadServiceInfoRequest>) {
     try {
-        const result: AxiosResponse<{ service: data.LongService }> = yield call(getSingleServiceAPI, action.serviceId);
-        yield put(getServiceInfoSuccess(result.data.service));
+        const result: AxiosResponse<{ service: Service }> = yield call(loadServiceInfoAPI, action.serviceId);
+        yield put(loadServiceInfoSuccess(result.data.service));
     } catch (err) {
-        yield put(getServiceInfoFailure(err.message));
+        yield put(loadServiceInfoFailure(err.message));
     }
 }
 
-function loadFirstReviewsAPI(serviceId: string) {
-    return axios.get(`api/v1/reviews?serviceId=${serviceId}&page=${1}`);
+function* watchAddService() {
+    yield takeLatest(ADD_SERVICE_REQUEST, addService);
 }
 
-function* loadFirstReviews(action: ReturnType<typeof loadFirstReviewRequest>) {
-    try {
-        const result: AxiosResponse<{ reviews: data.Review[] }> = yield call(loadFirstReviewsAPI, action.serviceId);
-        yield put(loadFirstReviewSuccess(result.data.reviews));
-    } catch (err) {
-        yield put(loadFirstReviewFailure(err.message));
-    }
+function* watchLoadService() {
+    yield takeLatest(LOAD_SERVICE_REQUEST, loadService);
 }
 
-function loadMoreReviewsAPI(serviceId: string, page: number) {
-    return axios.get(`api/v1/reviews?serviceId=${serviceId}&page=${page}`);
+function* watchChangeService() {
+    yield takeLatest(CHANGE_SERVICE_REQUEST, changeService);
 }
 
-function* loadMoreReviews(action: ReturnType<typeof loadMoreReviewsRequest>) {
-    try {
-        const result: AxiosResponse<{ reviews: data.Review[] }> = yield call(
-            loadMoreReviewsAPI,
-            action.serviceId,
-            action.page,
-        );
-        yield put(loadMoreReviewsSuccess(result.data.reviews));
-    } catch (err) {
-        yield put(loadMoreReviewsFailure(err.message));
-    }
+function* watchRemoveService() {
+    yield takeLatest(REMOVE_SERVICE_REQUEST, removeService);
 }
 
-function makeReservationAPI(accessToken: string, data: data.Order) {
-    return axios.post(
-        `api/v1/orders`,
-        {
-            ...data,
-        },
-        {
-            headers: {
-                accessToken,
-            },
-        },
-    );
+function* watchLoadTotalServices() {
+    yield throttle(5000, LOAD_TOTAL_SERVICES_REQUEST, loadTotalServices);
 }
 
-function* makeReservation(action: ReturnType<typeof createReservationRequest>) {
-    try {
-        const result: AxiosResponse<{ order: data.Order }> = yield call(
-            makeReservationAPI,
-            action.accessToken,
-            action.data,
-        );
-        yield put(createReservationSuccess(result.data.order));
-    } catch (err) {
-        console.log(err);
-        yield put(createReservationFailure(err.message));
-    }
+function* watchLoadPopularServices() {
+    yield takeLatest(LOAD_POPULAR_SERVICES_REQUEST, loadPopularServices);
 }
 
-function getAllReservationsAPI(userId: string, accessToken: string) {
-    return axios.get(`api/v1/orders/${userId}`, {
-        headers: {
-            accessToken,
-        },
-    });
+function* watchLoadSearchServices() {
+    yield throttle(5000, LOAD_SEARCH_SERVICES_REQUEST, loadSearchServices);
 }
 
-function* getAllReservations(action: ReturnType<typeof getAllReservationsRequest>) {
-    try {
-        const result: AxiosResponse<{ orders: [data.Order] }> = yield call(
-            getAllReservationsAPI,
-            action.userId,
-            action.accessToken,
-        );
-        yield put(getAllReservationsSuccess(result.data.orders));
-    } catch (err) {
-        yield put(getAllReservationsFailure(err.message));
-    }
-}
-
-function getReservationAPI(orderId: string | string[], accessToken: string) {
-    return axios.get(`api/v1/orders/${orderId}`, {
-        headers: {
-            accessToken,
-        },
-    });
-}
-
-function* getReservation(action: ReturnType<typeof getReservationInfoRequest>) {
-    try {
-        const result: AxiosResponse<{ order: data.Order }> = yield call(
-            getReservationAPI,
-            action.orderId,
-            action.accessToken,
-        );
-        yield put(getReservationInfoSuccess(result.data.order));
-    } catch (err) {
-        yield put(getReservationInfoFailure(err.message));
-    }
-}
-
-function reservationAcceptAPI(orderId: string, accessToken: string, state: string) {
-    return axios.patch(
-        `api/v1/orders/${orderId}`,
-        {
-            state,
-        },
-        {
-            headers: {
-                accessToken,
-            },
-        },
-    );
-}
-
-function* reservationAccept(action: ReturnType<typeof reservationAcceptRequest>) {
-    try {
-        const result: AxiosResponse<{ order: data.Order }> = yield call(
-            reservationAcceptAPI,
-            action.orderId,
-            action.accessToken,
-            action.state,
-        );
-        yield put(reservationAcceptSuccess(result.data.order));
-    } catch (err) {
-        yield put(reservationAcceptFailure(err.message));
-    }
-}
-
-function reservationRejectAPI(orderId: string, accessToken: string) {
-    return axios.delete(`api/v1/orders/${orderId}`, {
-        headers: {
-            accessToken,
-        },
-    });
-}
-
-function* reservationReject(action: ReturnType<typeof reservationRejectRequest>) {
-    try {
-        const result: AxiosResponse<{ message: string }> = yield call(
-            reservationRejectAPI,
-            action.orderId,
-            action.accessToken,
-        );
-        yield put(reservationRejectSuccess(result.data.message));
-    } catch (err) {
-        console.error(err);
-        yield put(reservationRejectFailure(err.message));
-    }
-}
-
-function checkoutAPI(orderId: string | string[], impUid: string | string[], accessToken: string) {
-    return axios.post(
-        `api/v1/payments/${orderId}`,
-        {
-            impUid,
-        },
-        {
-            headers: {
-                accessToken,
-            },
-        },
-    );
-}
-
-function* checkout(action: ReturnType<typeof checkoutRequest>) {
-    try {
-        const result: AxiosResponse<{ status: string; message: string }> = yield call(
-            checkoutAPI,
-            action.orderId,
-            action.impUid,
-            action.accessToken,
-        );
-        yield put(checkoutSuccess(result.data.status, result.data.message));
-    } catch (err) {
-        yield put(checkoutFailure(err.message));
-    }
-}
-
-function* watchLoadTotalService() {
-    yield throttle(5000, LOAD_TOTAL_SERVICE_REQUEST, loadTotalService);
-}
-
-function* watchLoadPopularService() {
-    yield takeLatest(LOAD_POPULAR_SERVICE_REQUEST, loadPopularService);
-}
-
-function* watchLoadSearchService() {
-    yield throttle(5000, LOAD_SEARCH_SERVICE_REQUEST, loadSearchService);
-}
-
-function* watchGetSingleService() {
-    yield takeLatest(GET_SERVICE_INFO_REQUEST, getSingleService);
-}
-
-function* watchLoadFirstReviews() {
-    yield takeLatest(LOAD_FIRST_REVIEWS_REQUEST, loadFirstReviews);
-}
-
-function* watchLoadMoreReviews() {
-    yield takeLatest(LOAD_MORE_REVIEWS_REQUEST, loadMoreReviews);
-}
-
-function* watchMakeReservation() {
-    yield takeLatest(CREATE_RESERVATION_REQUEST, makeReservation);
-}
-
-function* watchGetAllReservations() {
-    yield takeLatest(GET_ALL_RESERVATIONS_REQUEST, getAllReservations);
-}
-
-function* watchGetReservation() {
-    yield takeLatest(GET_RESERVATION_INFO_REQUEST, getReservation);
-}
-
-function* watchReservationAccept() {
-    yield takeLatest(RESERVATION_ACCEPT_REQUEST, reservationAccept);
-}
-
-function* watchReservationReject() {
-    yield takeLatest(RESERVATION_REJECT_REQUEST, reservationReject);
-}
-
-function* watchCheckout() {
-    yield takeLatest(CHECK_OUT_REQUEST, checkout);
+function* watchLoadServiceInfo() {
+    yield takeLatest(LOAD_SERVICE_INFO_REQUEST, loadServiceInfo);
 }
 
 export default function* serviceSaga() {
     yield all([
-        fork(watchLoadPopularService),
-        fork(watchLoadTotalService),
-        fork(watchLoadSearchService),
-        fork(watchGetSingleService),
-        fork(watchLoadFirstReviews),
-        fork(watchLoadMoreReviews),
-        fork(watchMakeReservation),
-        fork(watchGetAllReservations),
-        fork(watchGetReservation),
-        fork(watchReservationAccept),
-        fork(watchReservationReject),
-        fork(watchCheckout),
+        fork(watchAddService),
+        fork(watchLoadService),
+        fork(watchChangeService),
+        fork(watchRemoveService),
+        fork(watchLoadPopularServices),
+        fork(watchLoadTotalServices),
+        fork(watchLoadSearchServices),
+        fork(watchLoadServiceInfo),
     ]);
 }

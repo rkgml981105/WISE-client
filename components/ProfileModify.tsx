@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
@@ -6,11 +6,11 @@ import { Button } from 'antd';
 import { RootState } from '../reducers';
 import useInput from '../hooks/useInput';
 import { InputWrapper, Image, ProfileImagesWrapper, DeleteBtn, SubmitBtn } from './style';
-import { editProfileRequest } from '../actions/user';
+import { changeProfileRequest } from '../actions/user';
 
 const ProfileModify = () => {
     const dispatch = useDispatch();
-    const { me, accessToken } = useSelector((state: RootState) => state.user);
+    const { me, accessToken, changeProfileDone } = useSelector((state: RootState) => state.user);
 
     // 프로필 이미지
     const [image, setImage] = useState<File | null>(null);
@@ -35,19 +35,30 @@ const ProfileModify = () => {
         (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             const data = new FormData();
-            data.append('image', JSON.stringify(image));
+            data.append('image', image as File);
             data.append('name', name);
             data.append('mobile', mobile);
 
-            dispatch(editProfileRequest(me._id, accessToken, data));
+            dispatch(changeProfileRequest(me._id, accessToken, data));
         },
         [me, accessToken, image, name, mobile, dispatch],
     );
+
+    const [successMsg, setSuccessMsg] = useState(changeProfileDone);
+
+    useEffect(() => {
+        setSuccessMsg(changeProfileDone);
+    }, [changeProfileDone]);
+
+    useEffect(() => {
+        setSuccessMsg('');
+    }, []);
 
     return (
         <Wrapper>
             <Title>프로필 수정</Title>
             <ProfileForm onSubmit={onSubmit}>
+                {me.image && <Avatar src={process.env.NEXT_PUBLIC_imageURL + me.image} alt="avatar" />}
                 <InputWrapper>
                     <span>프로필 이미지</span>
                     <input type="file" accept="image/*" multiple hidden ref={imageInput} onChange={onChangeImages} />
@@ -76,10 +87,21 @@ const ProfileModify = () => {
                 <SubmitBtn type="submit" className="submitbtn">
                     프로필 수정
                 </SubmitBtn>
+                {successMsg && '프로필이 변경되었습니다.'}
             </ProfileForm>
         </Wrapper>
     );
 };
+
+const Avatar = styled.img`
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #d2d2d2;
+    margin-right: 5px;
+    margin-bottom: 3rem;
+`;
 
 const ProfileForm = styled.form`
     display: flex;

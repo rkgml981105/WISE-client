@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { LongService } from '../interfaces/data/service';
+import { Service } from '../interfaces/data/service';
 
 type Props = {
-    service: LongService;
+    service: Service;
     hours: number;
 };
 

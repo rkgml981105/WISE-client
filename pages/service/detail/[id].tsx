@@ -8,7 +8,7 @@ import Navigation from '../../../components/ServiceDetail/Navigation';
 import Summary from '../../../components/ServiceDetail/Summary';
 import Description from '../../../components/ServiceDetail/Description';
 import ReviewComponent from '../../../components/ServiceDetail/Review';
-import { GET_SERVICE_INFO_REQUEST } from '../../../interfaces/act/service';
+
 import Loading from '../../../components/Loading';
 import FAQ from '../../../components/ServiceDetail/FAQ';
 import Refund from '../../../components/ServiceDetail/Refund';
@@ -16,6 +16,7 @@ import wrapper from '../../../store/configureStore';
 import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
 import Swiper from '../../../components/ServiceDetail/Swiper';
+import { LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
 
 const Global = createGlobalStyle`
     footer {
@@ -93,7 +94,7 @@ const Detail = styled.div`
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async (context) => {
     context.store.dispatch({
-        type: GET_SERVICE_INFO_REQUEST,
+        type: LOAD_SERVICE_INFO_REQUEST,
         serviceId: context.params?.id,
     });
     context.store.dispatch(END);

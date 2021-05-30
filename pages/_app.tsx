@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 import type { AppProps } from 'next/app';
 
+import Router from 'next/router';
 import wrapper from '../store/configureStore';
 import { RootState } from '../reducers';
-import { loadMyInfoRequest } from '../actions/user';
+import { loadProfileRequest } from '../actions/user';
 
 const Global = createGlobalStyle`
     body{
@@ -35,7 +36,9 @@ const WISE = ({ Component, pageProps }: AppProps) => {
         if (!me) {
             const userId = localStorage.getItem('userId');
             if (userId) {
-                dispatch(loadMyInfoRequest());
+                dispatch(loadProfileRequest());
+            } else {
+                Router.push('/home');
             }
         }
     }, [me, dispatch]);

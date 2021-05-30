@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 
-import SearchBar from '../components/home/SearchBar';
 // import PopularSection from '../components/PopularSection';
 
 import { loadPopularServicesRequest, loadTotalServicesRequest } from '../actions/service';
 import wrapper from '../store/configureStore';
 import { RootState } from '../reducers';
 import Layout from '../layout/Layout';
+import SearchBar from '../components/home/SearchBar';
 import TotalSection from '../components/home/TotalSection';
 
 const Home = () => {

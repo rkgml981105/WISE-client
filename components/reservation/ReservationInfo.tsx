@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Order } from '../../interfaces/data/service';
+import { Order } from '../../interfaces/data/order';
 
 type Props = {
     reservationInfo: Order;

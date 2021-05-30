@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable no-underscore-dangle */
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
@@ -8,7 +9,7 @@ import { RootState } from '../../reducers';
 
 type TotalSectionProps = {
     title: string;
-    searchQuery: { date: string; location: string; page: number; time: string };
+    searchQuery?: { date: string; location: string; page: number; time: string };
 };
 
 const TotalSection = ({ title, searchQuery }: TotalSectionProps) => {

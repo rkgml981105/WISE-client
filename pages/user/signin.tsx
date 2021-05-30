@@ -2,11 +2,12 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import SigninForm from '../../components/auth/SigninForm';
+
 import { AuthGlobal, CoverImg, Modal, ModalTitle, ModalFooter } from '../../components/auth/styles';
 import { RootState } from '../../reducers';
-import { loadMyInfoRequest } from '../../actions/user';
 import Layout from '../../layout/Layout';
+import SigninForm from '../../components/auth/SigninForm';
+import { loadProfileRequest } from '../../actions/user';
 
 const Signin = () => {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Signin = () => {
 
     useEffect(() => {
         if (islogin) {
-            dispatch(loadMyInfoRequest());
+            dispatch(loadProfileRequest());
         }
     }, [islogin, dispatch]);
 
