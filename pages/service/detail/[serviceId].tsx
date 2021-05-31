@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ParsedUrlQuery } from 'querystring';
 import axios from 'axios';
 import Navigation from '../../../components/ServiceDetail/Navigation';
 import Summary from '../../../components/ServiceDetail/Summary';
@@ -34,14 +35,22 @@ const Global = createGlobalStyle`
 `;
 
 const ServiceDetail = () => {
-    const router = useRouter();
     const dispatch = useDispatch();
-    // const { id } = router.query;
-    // console.log(id);
-    // TODO: search result가 한번에 안받아와지고 새로고침해야지만 받아와지는 문제
-    const searchResult = router.query;
-    console.log(searchResult);
+    const router = useRouter();
+    const [searchResult, setSearchResult] = useState<ParsedUrlQuery | null>(null);
+
+    useEffect(() => {
+        console.log(router.isReady, router.query);
+        setSearchResult(router.query);
+    }, [router.isReady, router.query]);
+
     // TODO: review import
+
+    // TODO: search Query 동기 액션 dispatch해서 리덕스 스토어에 저장
+    // useEffect(() => {
+    //     dispatch({ type: ADD_SEARCH_QUERY, data: searchResult });
+    // }, [searchResult, dispatch]);
+
     const { service } = useSelector((state: RootState) => state.service);
 
     useEffect(() => {
@@ -54,7 +63,7 @@ const ServiceDetail = () => {
 
     return (
         <>
-            {service ? (
+            {service && searchResult ? (
                 <Layout title="Service Detail">
                     <>
                         <Global />
@@ -103,12 +112,32 @@ const Detail = styled.div`
 `;
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async (context) => {
+    console.log('server');
     context.store.dispatch({
         type: LOAD_SERVICE_INFO_REQUEST,
-        serviceId: context.params?.id,
+        serviceId: context.params?.serviceId,
     });
+
     context.store.dispatch(END);
     await context.store.sagaTask?.toPromise();
+    // return {
+    //     props: {
+    //         ...context.query,
+    //     },
+    // };
+
+    console.log(context.query);
 });
+
+// export const getStaticProps: GetStaticProps = wrapper.getStaticProps(async (context) => {
+//     console.log('getstatic');
+//     context.store.dispatch({
+//         type: LOAD_SERVICE_INFO_REQUEST,
+//         serviceId: context.params?.serviceId,
+//     });
+
+//     context.store.dispatch(END);
+//     await context.store.sagaTask?.toPromise();
+// });
 
 export default ServiceDetail;

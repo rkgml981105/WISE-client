@@ -66,7 +66,7 @@ export const loadOrderInfoFailure = (error: string) => ({
     error,
 });
 
-export const acceptOrderRequest = (orderId: string, accessToken: string, state: string) => ({
+export const acceptOrderRequest = (orderId: string | string[], accessToken: string, state: string) => ({
     type: ACCEPT_ORDER_REQUEST,
     orderId,
     accessToken,
@@ -81,7 +81,7 @@ export const acceptOrderFailure = (error: string) => ({
     error,
 });
 
-export const rejectOrderRequest = (orderId: string, accessToken: string) => ({
+export const rejectOrderRequest = (orderId: string | string[], accessToken: string) => ({
     type: REJECT_ORDER_REQUEST,
     orderId,
     accessToken,
