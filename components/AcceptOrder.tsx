@@ -86,7 +86,6 @@ const AcceptOrder = ({ orderId }: Props) => {
         }
     }, [dispatch, orderInfo, rejectOrderDone, acceptOrderDone, addNotificationDone]);
 
-<<<<<<< HEAD
     // isChecked로 바꾸기
     useEffect(() => {
         if (addNotificationDone) {
@@ -96,8 +95,6 @@ const AcceptOrder = ({ orderId }: Props) => {
             dispatch(checkNotificationRequest(thisNotification._id));
         }
     }, [addNotificationDone, dispatch, notifications, orderId]);
-=======
->>>>>>> e44580d14941a96b1dcbb10481f58ca44e699996
     // // isChecked로 바꾸기
     // useEffect(() => {
     //     if (addNotificationDone && notifications) {
