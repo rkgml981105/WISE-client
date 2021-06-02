@@ -1,4 +1,4 @@
-import { Order, ShortOrder } from '../interfaces/data/order';
+import { Order, OrderReq, ShortOrder } from '../interfaces/data/order';
 
 export const ADD_ORDER_REQUEST = 'ADD_ORDER_REQUEST' as const;
 export const ADD_ORDER_SUCCESS = 'ADD_ORDER_SUCCESS' as const;
@@ -20,9 +20,8 @@ export const REJECT_ORDER_REQUEST = 'REJECT_ORDER_REQUEST' as const;
 export const REJECT_ORDER_SUCCESS = 'REJECT_ORDER_SUCCESS' as const;
 export const REJECT_ORDER_FAILURE = 'REJECT_ORDER_FAILURE' as const;
 
-export const addOrderRequest = (accessToken: string, data: Order) => ({
+export const addOrderRequest = (data: OrderReq) => ({
     type: ADD_ORDER_REQUEST,
-    accessToken,
     data,
 });
 export const addOrderSuccess = (order: Order) => ({
@@ -34,9 +33,8 @@ export const addOrderFailure = (error: string) => ({
     error,
 });
 
-export const loadOrdersRequest = (accessToken: string, userType: string, userId: string) => ({
+export const loadOrdersRequest = (userType: string, userId: string) => ({
     type: LOAD_ORDERS_REQUEST,
-    accessToken,
     userType,
     userId,
 });
@@ -52,10 +50,9 @@ export const loadOrdersFailure = (error: string) => ({
     error,
 });
 
-export const loadOrderInfoRequest = (orderId: string | string[], accessToken: string) => ({
+export const loadOrderInfoRequest = (orderId: string | string[]) => ({
     type: LOAD_ORDER_INFO_REQUEST,
     orderId,
-    accessToken,
 });
 export const loadOrderInfoSuccess = (order: Order) => ({
     type: LOAD_ORDER_INFO_SUCCESS,
@@ -66,10 +63,9 @@ export const loadOrderInfoFailure = (error: string) => ({
     error,
 });
 
-export const acceptOrderRequest = (orderId: string | string[], accessToken: string, state: string) => ({
+export const acceptOrderRequest = (orderId: string | string[], state: string) => ({
     type: ACCEPT_ORDER_REQUEST,
     orderId,
-    accessToken,
     state,
 });
 export const acceptOrderSuccess = (order: Order) => ({
@@ -81,10 +77,9 @@ export const acceptOrderFailure = (error: string) => ({
     error,
 });
 
-export const rejectOrderRequest = (orderId: string | string[], accessToken: string) => ({
+export const rejectOrderRequest = (orderId: string | string[]) => ({
     type: REJECT_ORDER_REQUEST,
     orderId,
-    accessToken,
 });
 export const rejectOrderSuccess = (message: string) => ({
     type: REJECT_ORDER_SUCCESS,

@@ -14,7 +14,6 @@ type Props = {
 };
 
 const AcceptOrder = ({ orderId }: Props) => {
-    const { accessToken } = useSelector((state: RootState) => state.user);
     const { acceptOrderDone, acceptOrderError, rejectOrderDone, rejectOrderError, orderInfo } = useSelector(
         (state: RootState) => state.order,
     );
@@ -43,10 +42,10 @@ const AcceptOrder = ({ orderId }: Props) => {
         (e) => {
             if (!acceptOrderDone) {
                 e.preventDefault();
-                dispatch(acceptOrderRequest(orderId, accessToken, 'accept'));
+                dispatch(acceptOrderRequest(orderId, 'accept'));
             }
         },
-        [accessToken, orderId, dispatch, acceptOrderDone],
+        [orderId, dispatch, acceptOrderDone],
     );
 
     // 거절했을 때, 유저에게 알림으로 거절했다고 알려줘야함 -> delete reservation
@@ -54,10 +53,10 @@ const AcceptOrder = ({ orderId }: Props) => {
         (e) => {
             if (!rejectOrderDone) {
                 e.preventDefault();
-                dispatch(rejectOrderRequest(orderId, accessToken));
+                dispatch(rejectOrderRequest(orderId));
             }
         },
-        [accessToken, orderId, dispatch, rejectOrderDone],
+        [orderId, dispatch, rejectOrderDone],
     );
 
     // POST notification
@@ -70,7 +69,7 @@ const AcceptOrder = ({ orderId }: Props) => {
                     clientUrl: `/payment/checkout/${orderInfo._id}`,
                     content: `${orderInfo.assistant.name} 어시스턴트가 신청을 수락했습니다`,
                 };
-                dispatch(addNotificationRequest(notificationData, accessToken));
+                dispatch(addNotificationRequest(notificationData));
                 console.log('notification sent!');
                 console.log('add notification done', addNotificationDone);
             } else if (orderInfo && rejectOrderDone) {
@@ -80,11 +79,11 @@ const AcceptOrder = ({ orderId }: Props) => {
                     clientUrl: '',
                     content: `${orderInfo.assistant.name} 어시스턴트가 신청을 거절했어요`,
                 };
-                dispatch(addNotificationRequest(notificationData, accessToken));
+                dispatch(addNotificationRequest(notificationData));
                 console.log('notification sent!');
             }
         }
-    }, [accessToken, dispatch, orderInfo, rejectOrderDone, acceptOrderDone, addNotificationDone]);
+    }, [dispatch, orderInfo, rejectOrderDone, acceptOrderDone, addNotificationDone]);
 
     // isChecked로 바꾸기
     useEffect(() => {
@@ -92,9 +91,9 @@ const AcceptOrder = ({ orderId }: Props) => {
             const thisNotification = notifications.filter(
                 (notification: Notification) => notification.subject === orderId,
             )[0];
-            dispatch(checkNotificationRequest(thisNotification._id, accessToken));
+            dispatch(checkNotificationRequest(thisNotification._id));
         }
-    }, [accessToken, addNotificationDone, dispatch, notifications, orderId]);
+    }, [addNotificationDone, dispatch, notifications, orderId]);
 
     // 결과 모달 띄우기
     useEffect(() => {
