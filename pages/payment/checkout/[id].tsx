@@ -15,6 +15,7 @@ import { WarningBox, ActionButton } from '../../../components/style/style';
 import Layout from '../../../layout/Layout';
 import { loadOrderInfoRequest } from '../../../actions/order';
 import { loadServiceInfoRequest } from '../../../actions/service';
+import { Global } from '../../../components/style/global';
 
 const Payment = () => {
     const dispatch = useDispatch();
@@ -72,12 +73,14 @@ const Payment = () => {
                                         <ReservationInfo reservationInfo={orderInfo} />
                                         <OrderItem reservationInfo={orderInfo} />
                                     </Container>
-                                    <AssistantInfo
-                                        service={service}
-                                        hours={orderInfo.hours}
-                                        date={moment(orderInfo.date).format('YYYY-MM-DD')}
-                                        time={orderInfo.time}
-                                    />
+                                    <InfoWrapper>
+                                        <AssistantInfo
+                                            service={service}
+                                            hours={orderInfo.hours}
+                                            date={moment(orderInfo.date).format('YYYY-MM-DD')}
+                                            time={orderInfo.time}
+                                        />
+                                    </InfoWrapper>
                                 </Wrapper>
                             </>
                         </Layout>
@@ -95,6 +98,7 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-evenly;
     padding: 3rem;
+    margin-bottom: 5rem;
 `;
 
 const Container = styled.div`
@@ -109,6 +113,11 @@ const Title = styled.div`
     h2 {
         margin-top: 0.5rem;
     }
+`;
+
+const InfoWrapper = styled.div`
+    display: flex;
+    align-items: center;
 `;
 
 export default Payment;
