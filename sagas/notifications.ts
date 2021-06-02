@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios, { AxiosResponse } from 'axios';
@@ -31,7 +32,7 @@ function* loadNotifications(action: ReturnType<typeof loadNotificationsRequest>)
         const result: AxiosResponse<{ notifications: Notification[] }> = yield call(
             loadNotificationsAPI,
             action.userId,
-            accessToken,
+            action.token,
         );
         yield put(loadNotificationsSuccess(result.data.notifications));
     } catch (err) {

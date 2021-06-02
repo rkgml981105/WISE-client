@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 import styled, { createGlobalStyle } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -7,6 +8,7 @@ import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import axios from 'axios';
+import nookies from 'nookies';
 import Navigation from '../../../components/ServiceDetail/Navigation';
 import Summary from '../../../components/ServiceDetail/Summary';
 import Description from '../../../components/ServiceDetail/Description';
@@ -19,6 +21,9 @@ import { RootState } from '../../../reducers';
 import Layout from '../../../layout/Layout';
 import Swiper from '../../../components/ServiceDetail/Swiper';
 import { loadServiceSchedule, LOAD_SERVICE_INFO_REQUEST } from '../../../actions/service';
+import { loadNotificationsRequest } from '../../../actions/notifications';
+import { loadProfileRequest } from '../../../actions/user';
+import ResponsiveSummary from '../../../components/ServiceDetail/ResponsiveSummary';
 
 const Global = createGlobalStyle`
     footer {
@@ -55,6 +60,7 @@ const ServiceDetail = () => {
                             <Container>
                                 <Detail>
                                     <Swiper service={service} />
+                                    <ResponsiveSummary service={service} searchResult={searchResult} />
                                     <Navigation _id={service._id} />
                                     <Description service={service} />
                                     <ReviewComponent serviceId={service._id} />
@@ -81,6 +87,10 @@ const Wrapper = styled.div`
     justify-content: center;
     padding: 2rem 0;
     margin-bottom: 6rem;
+
+    @media ${(props) => props.theme.mobile} {
+        padding: 0;
+    }
 `;
 const Container = styled.div`
     width: 100%;
@@ -92,10 +102,16 @@ const Detail = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    @media ${(props) => props.theme.mobile} {
+        flex: 0;
+        width: 100vw;
+    }
 `;
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async (context) => {
-    console.log('server');
+    const cookies = nookies.get(context);
+    context.store.dispatch(loadProfileRequest(cookies.userId));
+    context.store.dispatch(loadNotificationsRequest(cookies.userId, cookies.token));
     if (context.params?.serviceId) {
         const result = await axios.get(
             `http://localhost:5000/api/v1/services/schedule?serviceId=${context.params?.serviceId}`,
