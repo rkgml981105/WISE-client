@@ -7,29 +7,36 @@ type Props = {
     date: string | string[];
     time: string | string[];
 };
-// TODO: searchResult default props 적용,
-//  payment에서는 어떻게 이걸 적용할지 고민, redux로 관리해야 할 거 같음
 
 const AssistantInfo = ({ service, hours, date, time }: Props) => {
     const IMAGE_URL = process.env.NEXT_PUBLIC_imageURL;
 
     return (
         <Wrapper>
-            <h2>김천사 어시스턴트</h2>
-            <img
-                src={`${IMAGE_URL}${service.images[0]}`}
-                alt="샘플이미지"
-                style={{ height: '12rem', objectFit: 'cover', borderRadius: '0.2rem' }}
-            />
+            <h2>{service.assistant.name} 어시스턴트</h2>
+            {service.images ? (
+                <img
+                    src={`${IMAGE_URL}${service.images[0]}`}
+                    alt="샘플이미지"
+                    style={{ height: '12rem', objectFit: 'cover', borderRadius: '0.2rem' }}
+                />
+            ) : (
+                <img
+                    src="images/avatar_default.png"
+                    alt="샘플이미지"
+                    style={{ height: '12rem', objectFit: 'cover', borderRadius: '0.2rem' }}
+                />
+            )}
+
             <h3>{service.greetings}</h3>
             <Text>
                 <span>지역</span> {service.location}
             </Text>
             <Text>
-                <span>날짜</span> {date}
+                <span>날짜</span> {date === 'undefined' ? '날짜를 확인하세요' : date}
             </Text>
             <Text>
-                <span>시간</span> {time}
+                <span>시간</span> {time === 'undefined' ? '시간을 확인하세요' : time}
             </Text>
             <Text>
                 <span>비용</span> {service.wage}원 / 시간

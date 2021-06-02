@@ -1,11 +1,26 @@
+/* eslint-disable react/button-has-type */
 import styled from 'styled-components';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
 import { RootState } from '../../reducers';
 import { Notification } from '../../interfaces/data/notifications';
+import { checkNotificationRequest } from '../../actions/notifications';
 
 const NotificationModal = () => {
+    const dispatch = useDispatch();
     const { notifications } = useSelector((state: RootState) => state.notifications);
+    const { accessToken } = useSelector((state: RootState) => state.user);
+
+    const handleCheckNotification = useCallback(
+        (notificationId) => {
+            console.log(notificationId, accessToken);
+            dispatch(checkNotificationRequest(notificationId, accessToken));
+            console.log('go dispatch!');
+        },
+
+        [accessToken, dispatch],
+    );
 
     return (
         <StyledModalOverlay>
@@ -24,7 +39,11 @@ const NotificationModal = () => {
                                             <CheckedButton disabled>확인 완료</CheckedButton>
                                         ) : (
                                             <Link href={notification.clientUrl}>
-                                                <Button>확인하기</Button>
+                                                <Button>
+                                                    <button onClick={() => handleCheckNotification(notification._id)}>
+                                                        확인하기
+                                                    </button>
+                                                </Button>
                                             </Link>
                                         )}
                                     </div>
@@ -41,7 +60,7 @@ const NotificationModal = () => {
 };
 const StyledModalOverlay = styled.div`
     position: absolute;
-    top: 11rem;
+    top: 12rem;
     right: 5%;
     height: 100%;
     display: flex;
@@ -53,8 +72,8 @@ const StyledModal = styled.div`
     background: white;
     width: 30rem;
     height: 20rem;
-    border-radius: 0.5rem;
-    box-shadow: 0.3rem 0.2rem 0.4rem #f0f0f0, -0.3rem 0.2rem 0.4rem #f0f0f0;
+    border-radius: 0.2rem;
+    box-shadow: 0.3rem 0.2rem 0.4rem rgba(27, 27, 27, 0.2), -0.3rem 0.2rem 0.4rem rgba(27, 27, 27, 0.2);
     padding: 1.5rem 2rem;
     z-index: 100;
     overflow-y: scroll;
@@ -103,6 +122,11 @@ const Button = styled.a`
     &:hover {
         border: 1px solid #68d480;
         /* background-color: #fff; */
+    }
+    button {
+        border: none;
+        background: none;
+        cursor: pointer;
     }
 `;
 

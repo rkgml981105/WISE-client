@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios, { AxiosResponse } from 'axios';
@@ -122,11 +123,8 @@ function rejectOrderAPI(orderId: string, accessToken: string) {
 
 function* rejectOrder(action: ReturnType<typeof rejectOrderRequest>) {
     try {
-        const result: AxiosResponse<{ message: string }> = yield call(
-            rejectOrderAPI,
-            action.orderId,
-            action.accessToken,
-        );
+        const accessToken = yield call(getFirebaseToken);
+        const result: AxiosResponse<{ message: string }> = yield call(rejectOrderAPI, action.orderId, accessToken);
         yield put(rejectOrderSuccess(result.data.message));
     } catch (err) {
         console.error(err);

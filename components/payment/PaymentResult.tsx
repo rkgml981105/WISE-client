@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 import React, { useCallback, useEffect, useState } from 'react';
@@ -9,9 +10,10 @@ import { ParsedUrlQuery } from 'querystring';
 import { RootState } from '../../reducers';
 import { ActionButton } from '../style/style';
 import { checkoutRequest } from '../../actions/payment';
-import { loadOrderInfoRequest } from '../../actions/order';
-import { addNotificationRequest, checkNotificationRequest } from '../../actions/notifications';
+
+import { addNotificationRequest } from '../../actions/notifications';
 import { Notification } from '../../interfaces/data/notifications';
+import { loadOrderInfoRequest } from '../../actions/order';
 
 type Props = {
     result: ParsedUrlQuery;
@@ -71,19 +73,20 @@ const PaymentResult = ({ result }: Props) => {
             };
             dispatch(addNotificationRequest(notification));
             console.log('notification sent!');
-        }
-    }, [addNotificationDone, dispatch, orderInfo]);
-
-    // isChecked로 바꾸기
-    useEffect(() => {
-        if (addNotificationDone) {
-            const thisNotification = notifications.filter(
-                (notification: Notification) => notification.subject === result.orderId,
-            )[0];
-            dispatch(checkNotificationRequest(thisNotification._id));
             router.push('/');
         }
-    }, [addNotificationDone, dispatch, notifications, result.orderId, router]);
+    }, [addNotificationDone, dispatch, orderInfo, router]);
+
+    // // isChecked로 바꾸기
+    // useEffect(() => {
+    //     if (addNotificationDone) {
+    //         const thisNotification = notifications.filter(
+    //             (notification: Notification) => notification.subject === result.orderId,
+    //         )[0];
+    //         dispatch(checkNotificationRequest(thisNotification._id, accessToken));
+    //         router.push('/');
+    //     }
+    // }, [accessToken, addNotificationDone, dispatch, notifications, result.orderId, router]);
 
     const resultType = isSuccessed ? '성공' : '실패';
     return (

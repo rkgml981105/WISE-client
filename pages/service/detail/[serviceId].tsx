@@ -1,10 +1,10 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import axios from 'axios';
 import Navigation from '../../../components/ServiceDetail/Navigation';
@@ -35,7 +35,6 @@ const Global = createGlobalStyle`
 `;
 
 const ServiceDetail = () => {
-    const dispatch = useDispatch();
     const router = useRouter();
     const [searchResult, setSearchResult] = useState<ParsedUrlQuery | null>(null);
 
@@ -43,13 +42,6 @@ const ServiceDetail = () => {
         console.log(router.isReady, router.query);
         setSearchResult(router.query);
     }, [router.isReady, router.query]);
-
-    // TODO: review import
-
-    // TODO: search Query 동기 액션 dispatch해서 리덕스 스토어에 저장
-    // useEffect(() => {
-    //     dispatch({ type: ADD_SEARCH_QUERY, data: searchResult });
-    // }, [searchResult, dispatch]);
 
     const { service } = useSelector((state: RootState) => state.service);
 
@@ -65,8 +57,7 @@ const ServiceDetail = () => {
                                     <Swiper service={service} />
                                     <Navigation _id={service._id} />
                                     <Description service={service} />
-                                    {/* <ReviewComponent review={review} /> */}
-                                    <ReviewComponent />
+                                    <ReviewComponent serviceId={service._id} />
                                     <FAQ />
                                     <Refund />
                                 </Detail>
@@ -118,13 +109,6 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
     context.store.dispatch(END);
     await context.store.sagaTask?.toPromise();
-    // return {
-    //     props: {
-    //         ...context.query,
-    //     },
-    // };
-
-    console.log(context.query);
 });
 
 // export const getStaticProps: GetStaticProps = wrapper.getStaticProps(async (context) => {

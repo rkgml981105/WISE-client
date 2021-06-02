@@ -23,7 +23,7 @@ const SwiperContainer = ({ service }: Props) => {
             <Wrapper>
                 <Swiper navigation className="mySwiper">
                     {service.images.map((image: string) => (
-                        <SwiperSlide key={image}>
+                        <SwiperSlide style={{ textAlign: 'center' }} key={image}>
                             <img src={`${IMAGE_URL}${image}`} alt="cover images" />
                         </SwiperSlide>
                     ))}
@@ -38,6 +38,7 @@ const Wrapper = styled.div`
     /* width: 90%; */
     max-width: 53vw;
     min-height: 30vh;
+    z-index: -1;
     /* .mySwiper {
         max-width: 50vw;
         min-height: 30vh;

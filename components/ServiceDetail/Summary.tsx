@@ -117,7 +117,6 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
                     searchResult?.time || time
                 }`}
             >
-                {/* <Link href={`../reservation/${service._id}`}> */}
                 <Button>신청하기</Button>
             </Link>
         </Wrapper>
