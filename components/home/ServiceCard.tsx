@@ -1,6 +1,4 @@
 /* eslint-disable react/require-default-props */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-underscore-dangle */
 import styled from 'styled-components';
 import Link from 'next/link';
 import { ShortService } from '../../interfaces/data/service';

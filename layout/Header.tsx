@@ -14,7 +14,7 @@ import { Notification } from '../interfaces/data/notifications';
 
 const Header = () => {
     const dispatch = useDispatch();
-    const { me, islogin, logOutDone } = useSelector((state: RootState) => state.user);
+    const { me } = useSelector((state: RootState) => state.user);
     const { notifications } = useSelector((state: RootState) => state.notifications);
     const [showModal, setShowModal] = useState(false);
     const [unchecked, setUnchecked] = useState(0);
@@ -52,7 +52,7 @@ const Header = () => {
                     </Link>
                     <UserTap>
                         <div>
-                            {islogin ? (
+                            {me ? (
                                 <>
                                     {me?.service ? (
                                         <Link href="/assistant/center">

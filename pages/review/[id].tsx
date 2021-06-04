@@ -1,5 +1,4 @@
 import moment from 'moment';
-// import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import styled from 'styled-components';
@@ -20,31 +19,14 @@ import wrapper from '../../store/configureStore';
 const Review = () => {
     const router = useRouter();
     const { me } = useSelector((state: RootState) => state.user);
+    const { orderInfo } = useSelector((state: RootState) => state.order);
+    const { service } = useSelector((state: RootState) => state.service);
 
     useEffect(() => {
         if (!me) {
             router.push('/user/signin');
         }
     }, [router, me]);
-    // const dispatch = useDispatch();
-    // const router = useRouter();
-    // const { id } = router.query;
-
-    // const { accessToken } = useSelector((state: RootState) => state.user);
-    const { orderInfo } = useSelector((state: RootState) => state.order);
-    const { service } = useSelector((state: RootState) => state.service);
-
-    // useEffect(() => {
-    //     if (accessToken) {
-    //         dispatch(loadOrderInfoRequest(id, accessToken));
-    //     }
-    // }, [id, accessToken, dispatch]);
-
-    // useEffect(() => {
-    //     if (orderInfo) {
-    //         dispatch(loadServiceInfoRequest(orderInfo.service));
-    //     }
-    // }, [orderInfo, dispatch]);
 
     return (
         <>

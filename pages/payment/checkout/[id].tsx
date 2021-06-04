@@ -22,33 +22,17 @@ import { loadProfileRequest } from '../../../actions/user';
 import wrapper from '../../../store/configureStore';
 
 const Payment = () => {
-    // const dispatch = useDispatch();
     const router = useRouter();
-    const { id } = router.query;
-    console.log(id);
 
     const { me } = useSelector((state: RootState) => state.user);
     const { service } = useSelector((state: RootState) => state.service);
     const { orderInfo } = useSelector((state: RootState) => state.order);
-    console.log(orderInfo);
 
     useEffect(() => {
         if (!me) {
             router.push('/user/signin');
         }
     }, [router, me]);
-
-    // useEffect(() => {
-    //     if (me) {
-    //         dispatch(loadOrderInfoRequest(id));
-    //     }
-    // }, [me, id, dispatch]);
-
-    // useEffect(() => {
-    //     if (orderInfo) {
-    //         dispatch(loadServiceInfoRequest(orderInfo.service));
-    //     }
-    // }, [orderInfo, dispatch]);
 
     return (
         <>
