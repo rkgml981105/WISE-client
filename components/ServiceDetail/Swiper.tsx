@@ -55,6 +55,11 @@ const Wrapper = styled.div`
     @media ${(props) => props.theme.mobile} {
         max-width: 100%;
         margin-left: 0;
+        max-height: 50vh;
+        img {
+            max-height: 50vh;
+            width: 100%;
+        }
     }
 `;
 

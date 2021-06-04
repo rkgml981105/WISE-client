@@ -1,8 +1,5 @@
-/* eslint-disable consistent-return */
 /* eslint-disable no-restricted-globals */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
-import nookies, { destroyCookie, setCookie } from 'nookies';
+import { destroyCookie, setCookie } from 'nookies';
 import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 import firebase from 'firebase/app';

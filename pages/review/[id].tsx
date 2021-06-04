@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import styled from 'styled-components';
 import nookies from 'nookies';
@@ -19,6 +19,8 @@ import wrapper from '../../store/configureStore';
 const Review = () => {
     const router = useRouter();
     const { me } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+
     const { orderInfo } = useSelector((state: RootState) => state.order);
     const { service } = useSelector((state: RootState) => state.service);
 
@@ -27,6 +29,12 @@ const Review = () => {
             router.push('/user/signin');
         }
     }, [router, me]);
+
+    useEffect(() => {
+        if (orderInfo) {
+            dispatch(loadServiceInfoRequest(orderInfo.service));
+        }
+    }, [orderInfo, dispatch]);
 
     return (
         <>
@@ -88,10 +96,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     }
     if (context.params?.id) {
         context.store.dispatch(loadOrderInfoRequest(context.params.id, cookies.token));
-    }
-    const order = context.store.getState().order.orderInfo;
-    if (order) {
-        context.store.dispatch(loadServiceInfoRequest(order.service._id));
     }
 
     context.store.dispatch(END);

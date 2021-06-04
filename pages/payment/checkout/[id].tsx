@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -22,6 +22,7 @@ import { loadProfileRequest } from '../../../actions/user';
 import wrapper from '../../../store/configureStore';
 
 const Payment = () => {
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const { me } = useSelector((state: RootState) => state.user);
@@ -33,6 +34,12 @@ const Payment = () => {
             router.push('/user/signin');
         }
     }, [router, me]);
+
+    useEffect(() => {
+        if (orderInfo) {
+            dispatch(loadServiceInfoRequest(orderInfo.service));
+        }
+    }, [orderInfo, dispatch]);
 
     return (
         <>
@@ -102,11 +109,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     }
     if (context.params) {
         context.store.dispatch(loadOrderInfoRequest(context.params.id, cookies.token));
-    }
-
-    const order = context.store.getState().order.orderInfo;
-    if (order) {
-        context.store.dispatch(loadServiceInfoRequest(order.service._id));
     }
 
     context.store.dispatch(END);
