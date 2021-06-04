@@ -34,7 +34,7 @@ export const DeleteBtn = styled.button`
 export const InputWrapper = styled.div`
     display: flex;
     & > span:first-child {
-        width: 8rem;
+        width: 130px;
         margin-right: 1rem;
     }
     textarea,
@@ -52,6 +52,10 @@ export const InputWrapper = styled.div`
     }
     margin-bottom: 1.5rem;
     position: relative;
+    .ant-checkbox-group {
+        max-width: 600px;
+        flex-grow: 1;
+    }
 `;
 
 export const SubmitBtn = styled.button`
@@ -135,15 +139,15 @@ export const WarningBox = styled.div`
         font-weight: 700;
     }
     a {
-        padding: 4rem;
         align-self: center;
-        border: 1px solid #f0f0f0;
-        box-shadow: 0.3rem 0.1rem 0.4rem #f0f0f0;
+        /* border: 1px solid #f0f0f0; */
+        /* box-shadow: 0.3rem 0.1rem 0.4rem #f0f0f0; */
         border-radius: 1rem;
         > .anticon {
+            width: 100%;
             font-size: 5rem;
-            text-align: center;
-            margin: 0 0 2rem 35%;
+            margin-bottom: 1rem;
+            justify-self: center;
             color: #db454c;
         }
     }

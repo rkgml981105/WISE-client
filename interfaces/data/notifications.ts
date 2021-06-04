@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface NotificationData {
     recipient: string | string[];
     subject: string;
@@ -7,7 +8,7 @@ export interface NotificationData {
 
 export interface Notification {
     _id: string;
-    sender: { id: string; name: string };
+    sender: { id: string; name: string } | string;
     recipient: string;
     subject: string;
     clientUrl: string;
@@ -18,7 +19,7 @@ export interface Notification {
 export type NotificationsState = {
     loadNotificationsLoading: boolean;
     loadNotificationsDone: boolean;
-    notifications: Notification[] | [];
+    notifications: Notification[];
     loadNotificationsError: null | string;
     addNotificationLoading: boolean;
     addNotificationDone: boolean;

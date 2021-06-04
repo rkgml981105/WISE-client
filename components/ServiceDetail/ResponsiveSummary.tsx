@@ -25,13 +25,15 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
 
     const onChangeDate = useCallback(
         (_, dateString: string) => {
-            if (
-                serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} am`) ||
+            if (dateString === '') {
+                setAvailableTime([]);
+            } else if (
+                !serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} am`) ||
                 serviceSchedule.orders.includes(`${dateString} am`)
             ) {
                 setAvailableTime(['pm']);
             } else if (
-                serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} pm`) ||
+                !serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} pm`) ||
                 serviceSchedule.orders.includes(`${dateString} pm`)
             ) {
                 setAvailableTime(['am']);
@@ -69,12 +71,12 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
         };
 
         if (checkDay(moment(current).format('dddd'))) {
-            return true;
+            return false;
         }
         if (checkOrder(moment(current).format('YYYY-MM-DD'))) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     };
     return (
         <>
@@ -129,7 +131,7 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
                         searchResult?.time || time
                     }`}
                 >
-                    <Button>신청하기</Button>
+                    <Button disabled={time === ''}>신청하기</Button>
                 </Link>
             </FixedBtn>
         </>
@@ -160,6 +162,9 @@ const Wrapper = styled.div`
         margin-top: 1rem;
         padding: 0 1rem;
         height: 22rem;
+    }
+    .ant-picker-suffix {
+        margin: 0;
     }
 `;
 
@@ -209,6 +214,10 @@ const Button = styled(ActionButton)`
     width: 90%;
     border-radius: 0.3rem;
     margin: 1rem 0;
+    background: ${(props) => (props.disabled ? '#ccc' : null)};
+    &:hover {
+        transform: none;
+    }
 `;
 
 const FixedBtn = styled.div`
