@@ -54,12 +54,12 @@ function addNotificationAPI(data: NotificationData, accessToken: string) {
 function* addNotification(action: ReturnType<typeof addNotificationRequest>) {
     try {
         const accessToken: string = yield call(getFirebaseToken);
-        const result: AxiosResponse<{ notifications: Notification[] }> = yield call(
+        const result: AxiosResponse<{ notification: Notification }> = yield call(
             addNotificationAPI,
             action.data,
             accessToken,
         );
-        yield put(addNotificationSuccess(result.data.notifications));
+        yield put(addNotificationSuccess(result.data.notification));
     } catch (err) {
         yield put(addNotificationFailure(err.message));
     }
@@ -79,12 +79,13 @@ function checkNotificationAPI(notificationId: string, accessToken: string) {
 function* checkNotification(action: ReturnType<typeof checkNotificationRequest>) {
     try {
         const accessToken: string = yield call(getFirebaseToken);
-        const result: AxiosResponse<{ notifications: Notification[] }> = yield call(
+        console.log(accessToken);
+        const result: AxiosResponse<{ notification: Notification }> = yield call(
             checkNotificationAPI,
             action.notificationId,
             accessToken,
         );
-        yield put(addNotificationSuccess(result.data.notifications));
+        yield put(addNotificationSuccess(result.data.notification));
     } catch (err) {
         yield put(addNotificationFailure(err.message));
     }

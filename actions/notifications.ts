@@ -1,4 +1,4 @@
-import { NotificationData, Notification } from '../interfaces/data/notifications';
+import { Notification, NotificationData } from '../interfaces/data/notifications';
 
 export const LOAD_NOTIFICATIONS_REQUEST = 'LOAD_NOTIFICATIONS_REQUEST' as const;
 export const LOAD_NOTIFICATIONS_SUCCESS = 'LOAD_NOTIFICATIONS_SUCCESS' as const;
@@ -33,9 +33,9 @@ export const addNotificationRequest = (data: NotificationData) => ({
     data,
 });
 
-export const addNotificationSuccess = (notifications: Notification[]) => ({
+export const addNotificationSuccess = (notification: Notification) => ({
     type: ADD_NOTIFICATION_SUCCESS,
-    notifications,
+    notification,
 });
 
 export const addNotificationFailure = (error: string) => ({
@@ -48,9 +48,9 @@ export const checkNotificationRequest = (notificationId: string) => ({
     notificationId,
 });
 
-export const checkNotificationSuccess = (notifications: Notification[]) => ({
+export const checkNotificationSuccess = (notification: Notification) => ({
     type: CHECK_NOTIFICATION_SUCCESS,
-    notifications,
+    notification,
 });
 
 export const checkNotificationFailure = (error: string) => ({

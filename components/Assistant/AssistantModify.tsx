@@ -316,7 +316,7 @@ const AssistantModify = () => {
                     onClose={onCloseModal}
                     title="어시스턴트 정보 수정"
                     message="어시스턴트 정보가 변경되었습니다"
-                    redirection="home"
+                    redirection="none"
                 />
             )}
             {showModal && changeServiceError && (

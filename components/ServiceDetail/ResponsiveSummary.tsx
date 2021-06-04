@@ -25,15 +25,15 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
 
     const onChangeDate = useCallback(
         (_, dateString: string) => {
-            if (!dateString) {
+            if (dateString === '') {
                 setAvailableTime([]);
             } else if (
-                serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} am`) ||
+                !serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} am`) ||
                 serviceSchedule.orders.includes(`${dateString} am`)
             ) {
                 setAvailableTime(['pm']);
             } else if (
-                serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} pm`) ||
+                !serviceSchedule.availableDays.includes(`${moment(dateString).format('dddd')} pm`) ||
                 serviceSchedule.orders.includes(`${dateString} pm`)
             ) {
                 setAvailableTime(['am']);
@@ -71,12 +71,12 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
         };
 
         if (checkDay(moment(current).format('dddd'))) {
-            return true;
+            return false;
         }
         if (checkOrder(moment(current).format('YYYY-MM-DD'))) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     };
     return (
         <>
@@ -162,6 +162,9 @@ const Wrapper = styled.div`
         margin-top: 1rem;
         padding: 0 1rem;
         height: 22rem;
+    }
+    .ant-picker-suffix {
+        margin: 0;
     }
 `;
 
