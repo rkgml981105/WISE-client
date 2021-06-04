@@ -20,7 +20,7 @@ type Props = {
 const Reservation = ({ service, hours, handleChangehours }: Props) => {
     const dispatch = useDispatch();
 
-    const { isLogin } = useSelector((state: RootState) => state.user);
+    const { me } = useSelector((state: RootState) => state.user);
     const { addOrderDone, addOrderError, orderInfo } = useSelector((state: RootState) => state.order);
     const { addNotificationDone } = useSelector((state: RootState) => state.notifications);
 
@@ -199,8 +199,9 @@ const Reservation = ({ service, hours, handleChangehours }: Props) => {
                     redirection="home"
                 />
             )}
+            {/* //TODO: 성공시 에러모달이 뜨는지 확인 */}
             {(showModal && addOrderError) ||
-                (showModal && !isLogin && (
+                (showModal && !me && (
                     <ResultModal
                         onClose={onCloseModal}
                         title="서비스 신청하기"

@@ -34,6 +34,11 @@ const Header = () => {
         console.log('clicked!');
     }, []);
 
+    const onCloseModal = useCallback(() => {
+        setShowModal(false);
+        console.log('clicked!');
+    }, []);
+
     const handleToggle = useCallback(() => {
         setVisible((state) => !state);
     }, []);
@@ -93,7 +98,7 @@ const Header = () => {
                                     </>
                                 ))}
                         </div>
-                        {showModal && <NotificationModal />}
+                        {showModal && <NotificationModal onClose={onCloseModal} />}
                         <Link href="/user/mypage">
                             <a>
                                 {me &&
@@ -130,12 +135,14 @@ const Header = () => {
                                     </>
                                 ))}
                         </div>
-                        <HamburgarButton visible={isVisible} onClick={handleToggle}>
+                        {showModal && <NotificationModal onClose={onClickModal} />}
+
+                        <HamburgerButton visible={isVisible} onClick={handleToggle}>
                             <span />
                             <span />
                             <span />
                             <span />
-                        </HamburgarButton>
+                        </HamburgerButton>
                         <Overlay visible={isVisible}>
                             <>
                                 {me &&
@@ -230,7 +237,7 @@ const Overlay = styled.div`
     visibility: ${(props) => (props.visible ? null : 'hidden')};
 `;
 
-const HamburgarButton = styled.div`
+const HamburgerButton = styled.div`
     transition: 0.3s ease-in-out;
     width: 22px;
     height: 62px;

@@ -57,6 +57,7 @@ const Wrapper = styled.div`
     box-shadow: 0.2rem 0.5rem 0.6rem #ddd;
     padding: 2rem 3rem;
     width: 25rem;
+    height: 40rem;
     margin: 7% 2%;
     div,
     h3,
