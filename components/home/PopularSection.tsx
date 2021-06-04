@@ -3,21 +3,19 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation } from 'swiper/core';
-// import Link from 'next/link';
+import Link from 'next/link';
 import { ShortService } from '../../interfaces/data/service';
 import { RootState } from '../../reducers';
-
 import 'swiper/swiper-bundle.css';
 
 // install Swiper modules
 SwiperCore.use([Navigation]);
 
 const PopularSection = () => {
-    const { popularServices } = useSelector((state: RootState) => state.service);
+    const { popularServices, searchQuery } = useSelector((state: RootState) => state.service);
     return (
         <>
             <Header>인기있는 어시스턴트</Header>
-
             <Wrapper>
                 <Swiper
                     navigation

@@ -118,7 +118,7 @@ const Summary = ({ service, searchResult }: ServiceProps) => {
                     searchResult?.time || time
                 }`}
             >
-                <Button>신청하기</Button>
+                <Button disabled={time === ''}>신청하기</Button>
             </Link>
         </Wrapper>
     );
