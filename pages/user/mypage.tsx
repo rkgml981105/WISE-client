@@ -143,11 +143,11 @@ const ResponsiveTap = styled.div`
     }
 `;
 
-const ResponsiveNav = styled.div<{ tap: number }>`
+const ResponsiveNav = styled.div<{ tap?: number }>`
     display: flex;
     justify-content: space-around;
     div {
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
         @media screen and (max-width: 465px) {
             font-size: 0.8rem;
@@ -176,10 +176,15 @@ const Avatar = styled.img`
     margin-left: 6.5%;
     margin-top: 5.3%;
     margin-right: 3%;
+
+    @media ${(props) => props.theme.mobile} {
+        margin-left: 4%;
+        margin-top: 5.3%;
+        margin-right: 6%;
+    }
 `;
 
 const Wrapper = styled.div`
-    // border: 1px solid black;
     // padding: 3rem;
     width: 100vw;
     padding: 24px;
@@ -187,10 +192,7 @@ const Wrapper = styled.div`
     display: flex;
 `;
 
-const NavTap = styled.div<{ tap: number }>`
-    // border: 1px solid black;
-
-    // width: 100%;
+const NavTap = styled.div<{ tap?: number }>`
     padding: 2.8rem;
     min-width: 250px;
     font-size: 1rem;
@@ -215,7 +217,6 @@ const NavTap = styled.div<{ tap: number }>`
 `;
 
 const Tap = styled.div`
-    // border: 1px solid black;
     margin-top: 3rem;
     padding: 4rem 0;
     max-width: 80%;
@@ -226,7 +227,6 @@ const Tap = styled.div`
 `;
 
 const UserInfo = styled.div`
-    // border: 1px solid black;
     .userName {
         font-size: 1.5rem;
         font-weight: bold;
@@ -255,7 +255,6 @@ const UserInfo = styled.div`
 `;
 
 const Nav = styled.div`
-    // border: 1px solid black;
     display: flex;
     flex-direction: column;
     div {

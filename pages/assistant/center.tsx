@@ -84,7 +84,7 @@ const Center = () => {
                     <ResponsiveUserInfo>
                         {myService && (
                             <img
-                                style={{ width: '60%', height: '32%', marginRight: '2.1rem', borderRadius: '5px' }}
+                                style={{ width: '45%', objectFit: 'cover', marginRight: '1.5rem', borderRadius: '5px' }}
                                 src={process.env.NEXT_PUBLIC_imageURL + myService.images[0]}
                                 alt="assistantImg"
                             />
@@ -150,14 +150,14 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 const ResponsiveTap = styled.div`
-    flexgrow: 1;
+    flex-grow: 1;
 `;
 
-const ResponsiveNav = styled.div`
+const ResponsiveNav = styled.div<{ tap?: number }>`
     display: flex;
     justify-content: space-around;
     div {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
         @media screen and (max-width: 520px) {
@@ -198,20 +198,17 @@ const Responsive = styled.div`
 `;
 
 const Wrapper = styled.div`
-    // border: 1px solid black;
     // padding: 3rem;
     width: 100vw;
     max-width: 1200px;
     padding: 24px;
     display: flex;
     @media ${(props) => props.theme.mobile} {
-        padding: 3.3rem;
         padding-top: 4rem;
     }
 `;
 
-const NavTap = styled.div`
-    // border: 1px solid black;
+const NavTap = styled.div<{ tap?: number }>`
     width: 250px;
     height: 60vh;
     padding: 3rem;
@@ -237,7 +234,6 @@ const NavTap = styled.div`
 `;
 
 const Tap = styled.div`
-    // border: 1px solid black;
     flex-grow: 1;
     margin: 3rem 0;
     @media ${(props) => props.theme.mobile} {
@@ -246,7 +242,6 @@ const Tap = styled.div`
 `;
 
 const UserInfo = styled.div`
-    // border: 1px solid black;
     .userName {
         font-size: 1.5rem;
         font-weight: bold;
@@ -254,7 +249,7 @@ const UserInfo = styled.div`
     .userEmail {
         color: #a1a1a1;
         font-size: 0.875rem;
-        margin-bottom: 20px;
+        margin-bottom: 1rem;
     }
     .profile {
         cursor: pointer;
@@ -266,12 +261,11 @@ const UserInfo = styled.div`
 `;
 
 const Nav = styled.div`
-    // border: 1px solid black;
     display: flex;
     flex-direction: column;
     div {
         color: #707070;
-        margin-bottom: 20px;
+        margin-bottom: 1rem;
         cursor: pointer;
     }
 `;

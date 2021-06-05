@@ -39,15 +39,38 @@ const PaymentDetails = ({ orders }: PaymentDetailsProps) => {
             key: 'mobile',
         },
         {
-            title: '총 비용',
+            title: '결제 비용',
             dataIndex: 'totalPayment',
             key: 'totalPayment',
         },
     ];
+    const shortcolumns = [
+        {
+            title: '주문명',
+            dataIndex: 'orderName',
+            key: 'orderName',
+        },
+        {
+            title: '결제일',
+            dataIndex: 'date',
+            key: 'date',
+        },
+        {
+            title: '결제 비용',
+            dataIndex: 'totalPayment',
+            key: 'totalPayment',
+        },
+    ];
+
     return (
         <Wrapper>
             <Title>현재 까지의 누적 결제 내역</Title>
-            <Table dataSource={dataSource} columns={columns} />
+            <NotResponsive>
+                <Table dataSource={dataSource} columns={columns} />
+            </NotResponsive>
+            <Responsive>
+                <Table dataSource={dataSource} columns={shortcolumns} />
+            </Responsive>
         </Wrapper>
     );
 };
@@ -65,4 +88,15 @@ const Title = styled.div`
     margin-bottom: 2rem;
 `;
 
+const NotResponsive = styled.div`
+    @media screen and (max-width: 640px) {
+        display: none;
+    }
+`;
+
+const Responsive = styled.div`
+    @media screen and (min-width: 640px) {
+        display: none;
+    }
+`;
 export default PaymentDetails;
