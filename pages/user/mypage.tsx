@@ -133,7 +133,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 const ResponsiveTap = styled.div`
-    padding: 3rem;
+    padding: 3rem 0;
     flexgrow: 1;
     @media screen and (max-width: 430px) {
         font-size: 0.8rem;
@@ -143,7 +143,7 @@ const ResponsiveTap = styled.div`
     }
 `;
 
-const ResponsiveNav = styled.div`
+const ResponsiveNav = styled.div<{ tap: number }>`
     display: flex;
     justify-content: space-around;
     div {
@@ -187,10 +187,10 @@ const Wrapper = styled.div`
     display: flex;
 `;
 
-const NavTap = styled.div`
+const NavTap = styled.div<{ tap: number }>`
     // border: 1px solid black;
 
-    width: 100%;
+    // width: 100%;
     padding: 2.8rem;
     min-width: 250px;
     font-size: 1rem;
@@ -217,7 +217,7 @@ const NavTap = styled.div`
 const Tap = styled.div`
     // border: 1px solid black;
     margin-top: 3rem;
-    padding: 4rem;
+    padding: 4rem 0;
     max-width: 80%;
     width: 100%;
     @media ${(props) => props.theme.mobile} {
