@@ -43,7 +43,7 @@ const SearchBar = () => {
             <Header>어시스턴트 찾기</Header>
             <div style={{ fontSize: '1rem' }}>&nbsp;함께 동행할 숙련된 어시스턴트를 찾아보세요</div>
             <Search>
-                <div>
+                <SearchInput>
                     <Select
                         onChange={onChangeLocation}
                         showSearch
@@ -59,14 +59,13 @@ const SearchBar = () => {
                         ))}
                     </Select>
                     <DatePicker onChange={onChangeDate} disabledDate={disabledDate} />
-                </div>
-                <div>
+                    <Divider />
                     <Radio.Group onChange={onChangeTime} size="middle">
                         <Radio.Button value="am">오전</Radio.Button>
                         <Radio.Button value="pm">오후</Radio.Button>
                     </Radio.Group>
-                    <Button shape="circle" icon={<SearchOutlined />} onClick={onSearch} />
-                </div>
+                </SearchInput>
+                <Button shape="circle" icon={<SearchOutlined />} onClick={onSearch} />
             </Search>
         </Wrapper>
     );
@@ -85,20 +84,58 @@ const Wrapper = styled.div`
     }
     button {
         background-color: #72cd87;
-        margin-left: 1rem;
         color: white;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 `;
 
 const Search = styled.div`
-    margin: 1rem 0 0 1rem;
+    margin-top: 1rem;
     display: flex;
+    align-items: center;
+
+    // customizing ant-design search bar
+    .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+    .ant-picker,
+    .ant-radio-button-wrapper {
+        border: none;
+        background: none;
+        outline: none;
+    }
+    .ant-btn:hover,
+    .ant-btn:focus,
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover,
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+        color: ${(props) => props.theme.mainColor};
+        border-color: ${(props) => props.theme.mainColor};
+    }
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover::before,
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+        background-color: ${(props) => props.theme.mainColor};
+    }
+
     @media ${(props) => props.theme.mobile} {
         margin: 1rem 0;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 5rem;
     }
+`;
+
+const SearchInput = styled.div`
+    padding: 0.3rem;
+    align-items: center;
+    border: 1px solid #d0d0d0;
+    border-radius: 2rem;
+    margin-right: 1rem;
+
+    @media ${(props) => props.theme.mobile} {
+        border-radius: 0.6rem;
+        width: 18rem;
+    }
+`;
+
+const Divider = styled.span`
+    border-right: 1px solid #d0d0d0;
+    margin: 0 0.5rem;
 `;
 
 const Header = styled.span`
