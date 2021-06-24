@@ -24,6 +24,7 @@ const Home = () => {
     const [page, setPage] = useState(2);
 
     useEffect(() => {
+        // TODO: lazy loading?
         function onScroll() {
             if (
                 window.pageYOffset + document.documentElement.clientHeight >

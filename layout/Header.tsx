@@ -99,6 +99,9 @@ const Header = () => {
                                 ))}
                         </div>
                         {showModal && <NotificationModal onClose={onCloseModal} />}
+                        <Link href="/chat">
+                            <a>채팅</a>
+                        </Link>
                         <Link href="/user/mypage">
                             <a>
                                 {me &&

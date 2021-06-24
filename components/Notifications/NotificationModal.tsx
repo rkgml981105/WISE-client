@@ -16,6 +16,7 @@ const NotificationModal = ({ onClose }: Props) => {
     const { notifications } = useSelector((state: RootState) => state.notifications);
 
     // 알림 확인버튼 누르면 isChecked로 변경 요청
+    // TODO: useCallback 필요없는 부분은 다 리팩토링해서 지우자
     const handleCheckNotification = useCallback(
         (notificationId) => {
             dispatch(checkNotificationRequest(notificationId));
