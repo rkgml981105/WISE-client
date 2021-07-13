@@ -37,7 +37,7 @@
     
 ### 주요 기능
 #### 1. 랜딩 페이지
-![WISE Main](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/44fbbad1-e0eb-4450-aea3-b45ed8787cfb/landing_page.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210615%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210615T022740Z&X-Amz-Expires=86400&X-Amz-Signature=2990fe744befa20a89753df6de1bd8130725962f520ca46927a3399f554f8521&X-Amz-SignedHeaders=host)
+![WISE Main](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/44fbbad1-e0eb-4450-aea3-b45ed8787cfb/landing_page.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210713%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210713T083246Z&X-Amz-Expires=86400&X-Amz-Signature=96fba81da7cb12d9da0e5eb9cdf468c66cf96ff866302191c0beaf181e972399&X-Amz-SignedHeaders=host)
 #### 2. 내게 필요한 어시스턴트 검색
 ![WISE SearchPage](https://ifh.cc/g/AQwUpd.gif)
 #### 3. 상세페이지, 예약하기 기능
