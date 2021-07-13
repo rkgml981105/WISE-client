@@ -16,6 +16,13 @@
 
 <br/><br/>
 
+### 사용 스택
+
+<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa22b6fd7-e8f5-4f9a-b3b4-59782f5611be%2FStack.jpg?table=block&id=3978dccd-49f4-437a-82d9-46aadcb41a85&spaceId=82d63a72-8254-4cde-bf1e-b2597b7c099c&width=3990&userId=f0af7070-6938-4e6b-bfca-e2de5a992dc3&cache=v2" width="750px">
+<br/><br/>
+
+---
+
 <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc578773a-112b-43c3-b685-b0abb657c806%2FDesktop_-_6.jpg?table=block&id=b545eaf4-5aa9-45f7-a0a3-ec96957c7ca3&spaceId=82d63a72-8254-4cde-bf1e-b2597b7c099c&width=3510&userId=f0af7070-6938-4e6b-bfca-e2de5a992dc3&cache=v2" width="800px">
 
 #### 부모님과 안전하게 병원에 동행할 딱 맞는 어시스턴트를 WISE에서 쉽게 찾아보세요.
@@ -64,11 +71,6 @@
 ![WISE_Detail_Responsive](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a80a6ab8-5668-4e5d-8fc4-5147eb775a8b/__.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210615%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210615T024001Z&X-Amz-Expires=86400&X-Amz-Signature=edb1f5b790d519a6a583880b4c1394f3bf0e10ec6f6d9502b45a04234e095a71&X-Amz-SignedHeaders=host)
 
 ## <br/><br/>
-
-### 사용 스택
-
-<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa22b6fd7-e8f5-4f9a-b3b4-59782f5611be%2FStack.jpg?table=block&id=3978dccd-49f4-437a-82d9-46aadcb41a85&spaceId=82d63a72-8254-4cde-bf1e-b2597b7c099c&width=3990&userId=f0af7070-6938-4e6b-bfca-e2de5a992dc3&cache=v2" width="750px">
-<br/><br/>
 
 ---
 
