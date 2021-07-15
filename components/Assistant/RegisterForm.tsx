@@ -160,7 +160,7 @@ const RegisterForm = () => {
         <Wrapper>
             <RegisterFormWrapper onSubmit={onSubmit} encType="multipart/form-data">
                 <InputWrapper>
-                    <span>✅가능 지역</span>
+                    <span>✅ 가능 지역</span>
                     <Select
                         style={{ width: '150px' }}
                         onChange={onChangeLocation}
@@ -176,11 +176,11 @@ const RegisterForm = () => {
                     </Select>
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅가능 요일</span>
+                    <span>✅ 가능 요일</span>
                     <Checkbox.Group options={AVAILABLEDAYS} onChange={onChangeDays} />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅프로필</span>
+                    <span>✅ 프로필</span>
                     <input type="file" accept="image/*" multiple hidden ref={imagesInput} onChange={onChangeImages} />
                     <Button icon={<UploadOutlined />} onClick={imagesUpload}>
                         Upload
@@ -197,16 +197,16 @@ const RegisterForm = () => {
                     ))}
                 </ProfileImagesWrapper>
                 <InputWrapper>
-                    <span>✅한줄 소개</span>
+                    <span>✅ 한줄 소개</span>
                     <input onChange={onChangeGreetings} placeholder="본인을 한줄로 설명해 주세요" required />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅가격</span>
+                    <span>✅ 가격</span>
                     <input type="number" onChange={onChangeWage} placeholder="시급" step={1000} required />
                     원/시간
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅서비스 소개</span>
+                    <span>✅ 서비스 소개</span>
                     <textarea
                         style={{ height: '5rem' }}
                         onChange={onChangeDescription}
@@ -215,7 +215,7 @@ const RegisterForm = () => {
                     />
                 </InputWrapper>
                 <InputWrapper>
-                    <span>✅계좌 번호</span>
+                    <span>✅ 계좌 번호</span>
                     <input onChange={onChangeBankAccount} placeholder="계좌번호" required />
                 </InputWrapper>
                 <hr />

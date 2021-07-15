@@ -9,6 +9,7 @@ type ServiceCard = {
     searchQuery?: { date: string; location: string; page: number; time: string };
 };
 
+// TODO: 지금 문제 - vercel로 배포했을 때 content-type이 /images가 아니라 /text/plain으로 찍혀서 INVALID_IMAGE_OPTIMIZE_REQUEST 에러가 뜸
 const ServiceCard = ({ service, searchQuery }: ServiceCard) => (
     <Link
         href={{

@@ -39,7 +39,7 @@ const PopularSection = () => {
                             >
                                 <a>
                                     <Img
-                                        src={`${process.env.NEXT_PUBLIC_imageURL}${ele.images[0]}`}
+                                        src={process.env.NEXT_PUBLIC_imageURL + ele.images[0]}
                                         width={240}
                                         height={200}
                                         layout="responsive"
