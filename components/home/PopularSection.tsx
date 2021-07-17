@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation } from 'swiper/core';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShortService } from '../../interfaces/data/service';
 import { RootState } from '../../reducers';
 import 'swiper/swiper-bundle.css';
@@ -37,9 +38,15 @@ const PopularSection = () => {
                                 }}
                             >
                                 <a>
-                                    <Img src={process.env.NEXT_PUBLIC_imageURL + ele.images[0]} alt="샘플이미지" />
+                                    <Img
+                                        src={process.env.NEXT_PUBLIC_imageURL + ele.images[0]}
+                                        width={240}
+                                        height={200}
+                                        layout="responsive"
+                                        alt="popular assistant"
+                                    />
                                     <div>
-                                        <div>
+                                        <div style={{ marginTop: '1rem' }}>
                                             <span style={{ fontWeight: 600, fontSize: '1rem' }}>
                                                 {ele.assistant.name}
                                             </span>{' '}
@@ -63,7 +70,6 @@ const PopularSection = () => {
 const Wrapper = styled.div`
     margin-bottom: 4rem;
     width: 100%;
-    height: 365px;
 
     .swiper-container {
         height: 100%;
@@ -76,13 +82,6 @@ const Wrapper = styled.div`
     .swiper-container .swiper-wrapper .swiper-slide {
         cursor: pointer;
         padding: 0;
-
-        @media ${(props) => props.theme.tablet} {
-            max-height: 50rem;
-        }
-        @media ${(props) => props.theme.mobile} {
-            max-height: 15rem;
-        }
     }
     .swiper-button-prev,
     .swiper-button-next {
@@ -97,21 +96,11 @@ const Wrapper = styled.div`
         padding: 0.5rem 0.8rem;
     }
 `;
-const Img = styled.img`
+const Img = styled(Image)<{ layout: string }>`
     background-position: center center;
     object-fit: cover;
     overflow: hidden;
-    height: 210px;
-    width: 100%;
-    border-radius: 3%;
-    margin-bottom: 30px;
-    @media screen and (max-width: 1023px) {
-        max-height: 40rem;
-        height: 250px;
-    }
-    @media ${(props) => props.theme.mobile} {
-        height: 200px;
-    }
+    border-radius: 4px;
 `;
 
 const Header = styled.div`

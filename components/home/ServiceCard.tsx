@@ -1,6 +1,7 @@
 /* eslint-disable react/require-default-props */
 import styled from 'styled-components';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShortService } from '../../interfaces/data/service';
 
 type ServiceCard = {
@@ -8,6 +9,7 @@ type ServiceCard = {
     searchQuery?: { date: string; location: string; page: number; time: string };
 };
 
+// TODO: 지금 문제 - vercel로 배포했을 때 content-type이 /images가 아니라 /text/plain으로 찍혀서 INVALID_IMAGE_OPTIMIZE_REQUEST 에러가 뜸
 const ServiceCard = ({ service, searchQuery }: ServiceCard) => (
     <Link
         href={{
@@ -22,11 +24,17 @@ const ServiceCard = ({ service, searchQuery }: ServiceCard) => (
     >
         <Container>
             {service.images === undefined ? (
-                <ServiceImg src="/images/avatar_default.png" style={{ width: '100px', height: '100px' }} />
+                <ServiceImg src="/images/avatar_default.png" width={240} height={200} layout="responsive" />
             ) : (
-                <ServiceImg src={process.env.NEXT_PUBLIC_imageURL + service.images[0]} alt="샘플이미지" />
+                <ServiceImg
+                    src={process.env.NEXT_PUBLIC_imageURL + service.images[0]}
+                    width={240}
+                    height={200}
+                    layout="responsive"
+                    alt="샘플이미지"
+                />
             )}
-            <div>
+            <div style={{ marginTop: '1rem' }}>
                 <div>
                     <span style={{ fontWeight: 600, fontSize: '1rem' }}>{service.assistant.name}</span>{' '}
                     <span style={{ fontWeight: 200, fontSize: '0.9rem' }}>&nbsp;{service.location}</span>
@@ -37,20 +45,12 @@ const ServiceCard = ({ service, searchQuery }: ServiceCard) => (
         </Container>
     </Link>
 );
-const ServiceImg = styled.img`
+const ServiceImg = styled(Image)<{ layout: string }>`
     background-color: cover;
     background-position: center center;
     object-fit: cover;
     overflow: hidden;
-    height: 59%;
-    border-radius: 3%;
-    margin-bottom: 30px;
-    @media screen and (max-width: 1023px) {
-        height: 250px;
-    }
-    @media ${(props) => props.theme.mobile} {
-        height: 200px;
-    }
+    border-radius: 4px;
 `;
 
 const Container = styled.div`

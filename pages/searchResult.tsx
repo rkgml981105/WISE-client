@@ -83,7 +83,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 const Wrapper = styled.div`
-    // border: 1px solid black;
     width: 100vw;
     padding: 24px;
     max-width: 1248px;
